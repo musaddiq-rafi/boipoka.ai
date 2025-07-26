@@ -178,64 +178,91 @@ export default function MyCollectionsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-700"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-blue-600">Loading your collections...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-10">
-        <p className="text-red-600">{error}</p>
-        <button
-          className="mt-4 px-4 py-2 bg-amber-700 text-white rounded-lg"
-          onClick={() => router.push("/signin")}
-        >
-          Go to Sign In
-        </button>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-xl text-center max-w-md">
+          <svg className="w-8 h-8 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="mb-4">{error}</p>
+          <button
+            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-300 shadow-md"
+            onClick={() => router.push("/signin")}
+          >
+            Go to Sign In
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <main className="bg-white text-gray-900 py-16 px-6 sm:px-10 min-h-screen">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">My Collections</h1>
-          <Link
-            href="/profile"
-            className="text-amber-700 hover:text-amber-800 flex items-center gap-1"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
-            Back to Profile
-          </Link>
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-16 px-6 sm:px-10">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl mb-8 px-6 py-8 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-4">
+                <span className="text-xs font-medium text-white">📚 Personal Collections</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">
+                My{" "}
+                <span className="bg-gradient-to-r from-cyan-300 to-blue-200 bg-clip-text text-transparent">
+                  Collections
+                </span>
+              </h1>
+              <p className="text-blue-100">Organize and manage your personal book collections</p>
+            </div>
+            <Link
+              href="/profile"
+              className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+              </svg>
+              Back to Profile
+            </Link>
+          </div>
         </div>
 
+        {/* Create Collection Button */}
         <div className="mb-8">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors flex items-center gap-2"
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-300 shadow-lg flex items-center gap-2"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
             Create New Collection
           </button>
         </div>
 
+        {/* Collections Grid */}
         {collections.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
               <Link
                 key={collection._id}
                 href={`/collections/${collection._id}`}
-                className="block border border-gray-200 rounded-xl p-6 bg-white hover:bg-amber-50 hover:border-amber-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                className="block bg-white/80 backdrop-blur-sm border border-blue-200 rounded-xl p-6 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-semibold text-lg text-amber-700 line-clamp-2">
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="font-semibold text-lg text-blue-700 line-clamp-2 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
                     {collection.title}
                   </h3>
                   <span className={`px-2 py-1 text-xs rounded-full ${
@@ -245,22 +272,27 @@ export default function MyCollectionsPage() {
                       ? 'bg-red-100 text-red-700'
                       : 'bg-blue-100 text-blue-700'
                   }`}>
-                    {collection.visibility}
+                    {collection.visibility === 'public' && '🌍 Public'}
+                    {collection.visibility === 'private' && '🔒 Private'}
+                    {collection.visibility === 'friends' && '👥 Friends'}
                   </span>
                 </div>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {collection.description}
+                  {collection.description || "No description provided"}
                 </p>
 
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span className="flex items-center gap-1">
+                <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t border-blue-100">
+                  <span className="flex items-center gap-2 text-blue-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 1 18 18a8.967 8.967 0 0 1-6 2.292m0-14.25v14.25" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                     {collection.books?.length || 0} book{collection.books?.length !== 1 ? "s" : ""}
                   </span>
-                  <span>
+                  <span className="flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 0v9M8 12h8" />
+                    </svg>
                     {new Date(collection.createdAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -268,23 +300,34 @@ export default function MyCollectionsPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-amber-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 1 18 18a8.967 8.967 0 0 1-6 2.292m0-14.25v14.25" />
+          <div className="bg-white/80 backdrop-blur-sm p-12 rounded-xl shadow-lg text-center border border-blue-200">
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-blue-600">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No Collections Yet</h3>
-            <p className="text-gray-500 mb-6">Start building your book collections by adding books you love!</p>
-            <Link
-              href="/explore"
-              className="inline-flex items-center px-6 py-3 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors"
-            >
-              Explore Books
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 ml-2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
+            <h3 className="text-2xl font-semibold text-blue-700 mb-3">No Collections Yet</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">Start building your book collections by creating your first collection and adding books you love!</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-300 shadow-lg"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Create First Collection
+              </button>
+              <Link
+                href="/explore"
+                className="inline-flex items-center px-6 py-3 border border-blue-200 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 hover:border-blue-300 font-medium transition-all duration-300"
+              >
+                Explore Books
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 ml-2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
           </div>
         )}
       </div>
@@ -292,37 +335,46 @@ export default function MyCollectionsPage() {
       {/* Create Collection Modal */}
       {showCreateModal && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={handleCloseModal}
         >
           <div
-            className="bg-white rounded-xl shadow-2xl w-full max-w-md"
+            className="bg-white/95 backdrop-blur-sm rounded-xl shadow-xl w-full max-w-md border border-blue-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Create New Collection</h2>
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-t-xl px-6 py-4">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                  Create New Collection
+                </h2>
                 <button
                   onClick={handleCloseModal}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-white/80 hover:text-white transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
+            </div>
 
-              <form onSubmit={handleCreateCollection} className="space-y-4">
+            {/* Modal Body */}
+            <div className="p-6">
+              <form onSubmit={handleCreateCollection} className="space-y-5">
                 <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                    Collection Title *
+                  <label htmlFor="title" className="block text-sm font-medium text-blue-700 mb-2">
+                    📚 Collection Title *
                   </label>
                   <input
                     type="text"
                     id="title"
                     value={createForm.title}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50 text-blue-900 placeholder-blue-400"
                     placeholder="Enter collection title"
                     maxLength={100}
                     required
@@ -330,14 +382,14 @@ export default function MyCollectionsPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
+                  <label htmlFor="description" className="block text-sm font-medium text-blue-700 mb-2">
+                    📝 Description
                   </label>
                   <textarea
                     id="description"
                     value={createForm.description}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-blue-50 text-blue-900 placeholder-blue-400"
                     placeholder="Describe your collection (optional)"
                     rows={3}
                     maxLength={500}
@@ -345,18 +397,18 @@ export default function MyCollectionsPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700 mb-1">
-                    Visibility
+                  <label htmlFor="visibility" className="block text-sm font-medium text-blue-700 mb-2">
+                    👁️ Visibility
                   </label>
                   <select
                     id="visibility"
                     value={createForm.visibility}
                     onChange={(e) => setCreateForm(prev => ({ ...prev, visibility: e.target.value as "public" | "private" | "friends" }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-blue-50 text-blue-900"
                   >
-                    <option value="public">Public</option>
-                    <option value="private">Private</option>
-                    <option value="friends">Friends Only</option>
+                    <option value="public">🌍 Public - Everyone can see</option>
+                    <option value="private">🔒 Private - Only you can see</option>
+                    <option value="friends">👥 Friends Only</option>
                   </select>
                 </div>
 
@@ -364,14 +416,14 @@ export default function MyCollectionsPage() {
                   <button
                     type="button"
                     onClick={handleCloseModal}
-                    className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={createLoading || !createForm.title.trim()}
-                    className="flex-1 px-4 py-2 bg-amber-700 text-white rounded-md hover:bg-amber-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-md"
                   >
                     {createLoading ? (
                       <>
