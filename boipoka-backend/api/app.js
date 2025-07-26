@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(jsonErrorHandler);
 
 // Serve static files for AdminJS
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // import routers
 import authRouter from "./routes/auth.route.js";
@@ -38,6 +38,7 @@ import collectionRouter from "./routes/collection.route.js";
 import blogRouter from "./routes/blog.route.js";
 import readingListRouter from "./routes/readingList.route.js";
 import profileRouter from "./routes/profile.route.js";
+import chatRouter from "./routes/chat.route.js";
 
 // use routes
 app.use("/api/auth", attachUser, authRouter);
@@ -45,6 +46,7 @@ app.use("/api/profile", verifyUser, profileRouter);
 app.use("/api/collections", verifyUser, collectionRouter);
 app.use("/api/blogs", verifyUser, blogRouter);
 app.use("/api/reading-list", verifyUser, readingListRouter);
+app.use("/api/chats", verifyUser, chatRouter);
 
 // setup adminjs
 const { adminJS, router: adminRouter } = setupAdmin(app);
