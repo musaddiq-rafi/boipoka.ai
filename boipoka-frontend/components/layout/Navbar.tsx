@@ -102,6 +102,12 @@ export default function Navbar() {
                 Character Chat
               </Link>
               <Link
+                  href="/character-guess"
+                  className={getLinkStyles('/character-guess')}
+              >
+                Character Guesser
+              </Link>
+              <Link
                 href="/collections"
                 className={getLinkStyles('/collections')}
               >
@@ -284,6 +290,13 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(false)}
                 >
                   Character Chat
+                </Link>
+                <Link
+                    href="/character-guess"
+                    className={`${isActive('/character-guess') ? "text-blue-600 bg-blue-50" : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"} py-2 px-3 rounded-lg transition`}
+                    onClick={() => setMenuOpen(false)}
+                >
+                  Character Guesser
                 </Link>
                 <Link
                   href="/collections"

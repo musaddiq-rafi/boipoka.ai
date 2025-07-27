@@ -74,6 +74,14 @@ const chatSchema = new mongoose.Schema(
     metadata: {
       totalTokens: { type: Number, default: 0 },
       totalMessages: { type: Number, default: 0 },
+      // Game-specific metadata for character guessing game
+      gameState: {
+        type: String,
+        enum: ["questioning", "guessing", "completed"],
+        default: "questioning",
+      },
+      questionCount: { type: Number, default: 0 },
+      gameResult: { type: String }, // "ai_won", "user_won", etc.
     },
   },
   {
