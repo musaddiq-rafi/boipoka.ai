@@ -51,7 +51,14 @@ export default function CharacterChatWindow({ chatId }: { chatId: string }) {
 
   const fetchChat = async () => {
     try {
-      const response = await fetch(`/api/chats/${chatId}`);
+      const token = localStorage.getItem('authToken'); // Adjust based on how you store auth token
+
+      const response = await fetch(`http://localhost:5001/api/chats/${chatId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        }
+      });
       const result = await response.json();
 
       if (result.success) {
@@ -87,7 +94,7 @@ export default function CharacterChatWindow({ chatId }: { chatId: string }) {
     const welcomeContent = welcomeMessages[chat.characterId as keyof typeof welcomeMessages];
 
     try {
-      const response = await fetch(`/api/chats/${chatId}/messages`, {
+      const response = await fetch(`http://localhost:5001/api/chats/${chatId}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,8 +124,8 @@ export default function CharacterChatWindow({ chatId }: { chatId: string }) {
     setIsLoading(true);
 
     try {
-      // Add user message
-      const userResponse = await fetch(`/api/chats/${chatId}/messages`, {
+      // Add user message to chat
+      const userResponse = await fetch(`http://localhost:5001/api/chats/${chatId}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,16 +138,49 @@ export default function CharacterChatWindow({ chatId }: { chatId: string }) {
         }),
       });
 
+      if (!userResponse.ok) {
+        throw new Error(`Failed to add user message: ${userResponse.status}`);
+      }
+
       const userResult = await userResponse.json();
       if (userResult.success) {
         setMessages(prev => [...prev, userResult.data]);
       }
 
-      // Get AI response - you'll need to implement this API call to your AI service
-      // For now, using a placeholder response
-      setTimeout(async () => {
-        try {
-          const aiResponse = await fetch(`/api/chats/${chatId}/messages`, {
+      // Get chat history for AI context
+      const historyResponse = await fetch(`http://localhost:5001/api/chats/${chatId}/history?limit=10`);
+
+      if (!historyResponse.ok) {
+        throw new Error(`Failed to get chat history: ${historyResponse.status}`);
+      }
+
+      const historyResult = await historyResponse.json();
+
+      if (historyResult.success) {
+        // Generate AI response with character context
+        const aiResponse = await fetch('/api/ai/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messages: historyResult.data,
+            context: chat?.context,
+            characterId: chat?.characterId,  // Pass character ID for additional context
+            characterName: character?.name,  // Pass character name
+            model: 'gemini-pro'
+          }),
+        });
+
+        if (!aiResponse.ok) {
+          throw new Error(`AI generation failed: ${aiResponse.status}`);
+        }
+
+        const aiResult = await aiResponse.json();
+
+        if (aiResult.success) {
+          // Add AI response to chat
+          const messageResponse = await fetch(`http://localhost:5001/api/chats/${chatId}/messages`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -148,24 +188,34 @@ export default function CharacterChatWindow({ chatId }: { chatId: string }) {
             body: JSON.stringify({
               data: {
                 role: 'assistant',
-                content: generatePlaceholderResponse(chat?.characterId, userMessageContent)
+                content: aiResult.data.content
               }
             }),
           });
 
-          const aiResult = await aiResponse.json();
-          if (aiResult.success) {
-            setMessages(prev => [...prev, aiResult.data]);
+          if (!messageResponse.ok) {
+            throw new Error(`Failed to add AI message: ${messageResponse.status}`);
           }
-        } catch (error) {
-          console.error('Error getting AI response:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      }, 1000);
 
+          const messageResult = await messageResponse.json();
+          if (messageResult.success) {
+            setMessages(prev => [...prev, messageResult.data]);
+          }
+        } else {
+          throw new Error(aiResult.message || 'AI generation failed');
+        }
+      }
     } catch (error) {
       console.error('Error sending message:', error);
+
+      // Show error message to user
+      setMessages(prev => [...prev, {
+        _id: Date.now().toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error while processing your message. Please try again.',
+        timestamp: new Date().toISOString()
+      }]);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -218,7 +268,7 @@ export default function CharacterChatWindow({ chatId }: { chatId: string }) {
               <h1 className="text-lg font-semibold text-gray-900">
                 {character.name}
               </h1>
-              <p className="text-sm text-gray-600">From "{character.book}"</p>
+              <p className="text-sm text-gray-600">From &ldquo;{character.book}&rdquo;</p>
             </div>
           </div>
         </div>

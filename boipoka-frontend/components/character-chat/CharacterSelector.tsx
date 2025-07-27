@@ -70,12 +70,19 @@ export default function CharacterSelector() {
   const handleStartChat = async () => {
     if (!selectedCharacter) return;
 
+    const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in first');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const response = await fetch('/api/chats', {
+      const response = await fetch('http://localhost:5001/api/chats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken') || localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           data: {
@@ -126,8 +133,7 @@ export default function CharacterSelector() {
                   {character.name}
                 </h3>
                 <p className="text-sm text-gray-600 mb-2">
-                  From "{character.book}" by {character.author}
-                </p>
+                  From &ldquo;{character.book}&rdquo; by {character.author}                </p>
                 <p className="text-gray-700 mb-3">{character.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {character.personality.map((trait) => (
