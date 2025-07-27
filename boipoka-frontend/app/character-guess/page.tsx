@@ -49,8 +49,11 @@ export default function CharacterGuessPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            📚 Character Guesser
+            📚 Bookinator 
           </h1>
+          <p className="text-xl text-gray-700 mb-2">
+            Boipoka.ai's very own character guesser
+          </p>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Think of any book character and I&apos;ll try to guess who it is!
             Just answer my questions with &quot;Yes&quot;, &quot;No&quot;, or &quot;Not Sure&quot;.

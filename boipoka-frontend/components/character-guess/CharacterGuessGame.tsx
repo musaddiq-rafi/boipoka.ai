@@ -372,9 +372,7 @@ Continue the guessing game. If you haven't made a guess yet and feel you have en
           <span className="text-xl font-semibold">Character Guesser</span>
           <span className="text-2xl">🔮</span>
         </div>
-        <div className="text-xs md:text-sm">
-          Questions: {game.metadata.questionCount || 0}
-        </div>
+       
         <button
           onClick={startNewGame}
           disabled={isStarting}

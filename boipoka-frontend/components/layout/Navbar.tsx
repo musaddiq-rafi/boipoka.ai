@@ -89,23 +89,18 @@ export default function Navbar() {
               >
                 Explore
               </Link>
-              <Link
-                href="/ai-chat"
-                className={getLinkStyles('/ai-chat')}
-              >
-                AI Chat
-              </Link>
+             
               <Link
                   href="/character-chat"
                   className={getLinkStyles('/character-chat')}
               >
-                Character Chat
+                Fictional Chat
               </Link>
               <Link
                   href="/character-guess"
                   className={getLinkStyles('/character-guess')}
               >
-                Character Guesser
+                Bookinator
               </Link>
               <Link
                 href="/collections"
