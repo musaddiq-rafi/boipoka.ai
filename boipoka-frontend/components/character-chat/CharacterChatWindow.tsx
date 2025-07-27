@@ -8,9 +8,6 @@ import { initFirebase } from "@/lib/googleAuth";
 // Initialize Firebase
 initFirebase();
 
-// Initialize Firebase
-initFirebase();
-
 interface Message {
   _id: string;
   role: "user" | "assistant";
@@ -44,6 +41,8 @@ export default function CharacterChatWindow({
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
   const fetchMessages = useCallback(async () => {
     const auth = getAuth();
@@ -77,7 +76,9 @@ export default function CharacterChatWindow({
       );
 
       if (result.success) {
-        setMessages(result.data.chat.messages || []);
+        const fetchedMessages = result.data.chat.messages || [];
+        setMessages(fetchedMessages);
+        setShouldAutoScroll(true);
       } else {
         throw new Error(result.message || "Failed to fetch messages");
       }
@@ -93,16 +94,42 @@ export default function CharacterChatWindow({
     fetchMessages();
   }, [fetchMessages]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const scrollToBottom = useCallback(() => {
+    if (shouldAutoScroll && messagesEndRef.current && messagesContainerRef.current) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "end" 
+        });
+      }, 100);
+    }
+  }, [shouldAutoScroll]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const handleScroll = useCallback(() => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShouldAutoScroll(isNearBottom);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0 && shouldAutoScroll) {
+      scrollToBottom();
+    }
+  }, [messages, shouldAutoScroll, scrollToBottom]);
+
+  useEffect(() => {
+    if (!isLoading && messages.length > 0) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 200);
+    }
+  }, [isLoading, messages.length, scrollToBottom]);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
 
     if (!inputMessage.trim() || isSending) return;
 
@@ -110,6 +137,7 @@ export default function CharacterChatWindow({
     setInputMessage("");
     setIsSending(true);
     setError(null);
+    setShouldAutoScroll(true);
 
     const auth = getAuth();
     if (!auth.currentUser) {
@@ -120,7 +148,6 @@ export default function CharacterChatWindow({
 
     try {
       const token = await auth.currentUser.getIdToken();
-      // Add user message to local state immediately
       const tempUserMessage: Message = {
         _id: `temp-user-${Date.now()}`,
         role: "user",
@@ -129,7 +156,6 @@ export default function CharacterChatWindow({
       };
       setMessages((prev) => [...prev, tempUserMessage]);
 
-      // Send message to backend
       const response = await fetch(
         `http://localhost:5001/api/chats/${chatId}/messages`,
         {
@@ -154,17 +180,14 @@ export default function CharacterChatWindow({
       const result = await response.json();
 
       if (result.success) {
-        // Get the last message from the chat (the one we just added)
         const newMessage =
           result.data.chat.messages[result.data.chat.messages.length - 1];
-        // Replace temp message with actual message from backend
         setMessages((prev) =>
           prev.map((msg) =>
             msg._id === tempUserMessage._id ? newMessage : msg
           )
         );
 
-        // Generate AI response
         await generateAIResponse(newMessage);
       } else {
         throw new Error(result.message || "Failed to send message");
@@ -172,9 +195,8 @@ export default function CharacterChatWindow({
     } catch (error) {
       console.error("Error sending message:", error);
       setError("Failed to send message. Please try again.");
-      // Remove the temporary user message on error
       setMessages((prev) =>
-        prev.filter((msg) => msg._id.startsWith("temp-user-"))
+        prev.filter((msg) => !msg._id.startsWith("temp-user-"))
       );
     } finally {
       setIsSending(false);
@@ -186,7 +208,6 @@ export default function CharacterChatWindow({
       const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
       if (!apiKey || apiKey === "your_gemini_api_key_here") {
-        // Fallback to local responses if no API key
         console.warn("No Gemini API key found, using local responses");
         const aiResponse = generateCharacterResponse(character.name);
         await saveAIMessage(aiResponse);
@@ -196,15 +217,13 @@ export default function CharacterChatWindow({
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-      // Get the latest user message from the current messages state
       const currentMessages = userMessage
         ? [...messages, userMessage]
         : messages;
       const latestUserMessage = currentMessages[currentMessages.length - 1];
 
-      // Prepare conversation history for context (including the latest message)
       const conversationHistory = currentMessages
-        .slice(-6) // Keep last 6 messages for context
+        .slice(-6)
         .filter((msg): msg is Message => msg !== undefined)
         .map(
           (msg) =>
@@ -227,7 +246,6 @@ Please respond as ${character.name} from "${
       const response = await result.response;
       let aiResponse = response.text();
 
-      // Truncate response if it's too long (keep under 4500 chars to be safe)
       if (aiResponse.length > 4500) {
         aiResponse = aiResponse.substring(0, 4450) + "...";
         console.warn("AI response truncated due to length limit");
@@ -236,19 +254,6 @@ Please respond as ${character.name} from "${
       await saveAIMessage(aiResponse);
     } catch (error) {
       console.error("Error with Gemini API:", error);
-      // Check if it's a model not found error
-      if (
-        error instanceof Error &&
-        error.message.includes("models/gemini-pro is not found")
-      ) {
-        console.warn("Gemini Pro model not available, using fallback response");
-      } else if (
-        error instanceof Error &&
-        error.message.includes("not found for API version")
-      ) {
-        console.warn("Model version not supported, using fallback response");
-      }
-      // Fallback to local responses on API error
       const aiResponse = generateCharacterResponse(character.name);
       await saveAIMessage(aiResponse);
     }
@@ -256,7 +261,6 @@ Please respond as ${character.name} from "${
 
   const saveAIMessage = async (aiResponse: string) => {
     try {
-      // Add AI response to backend
       const auth = getAuth();
       const token = await auth.currentUser?.getIdToken();
 
@@ -288,7 +292,6 @@ Please respond as ${character.name} from "${
       const result = await response.json();
 
       if (result.success) {
-        // Get the last message from the chat (the AI response we just added)
         const newMessage =
           result.data.chat.messages[result.data.chat.messages.length - 1];
         setMessages((prev) => [...prev, newMessage]);
@@ -297,7 +300,6 @@ Please respond as ${character.name} from "${
       }
     } catch (error) {
       console.error("Error saving AI response:", error);
-      // Add error message
       const errorMessage: Message = {
         _id: `error-${Date.now()}`,
         role: "assistant",
@@ -310,99 +312,92 @@ Please respond as ${character.name} from "${
   };
 
   const generateCharacterResponse = (characterName: string): string => {
-    const responses = {
-      "Sherlock Holmes": [
-        "Elementary! Your message reveals quite a bit about your state of mind. I observe that you are curious by nature, which is always a commendable trait.",
-        "Fascinating observation. The evidence suggests you have something important on your mind. Pray, continue.",
-        "Most intriguing! As I always say, 'You see, but you do not observe.' What details have you noticed that others might miss?",
+    const responses: Record<string, string[]> = {
+      "আদুভাই": [
+        "সব সাবজেক্টে পাকা হয়ে ওঠাই ভালো। প্রমোশন সেদিন আমাকে দিতেই হবে।",
+        "জ্ঞানলাভের জন্যই আমরা স্কুলে পড়ি, প্রমোশন লাভের জন্য পড়ি না।",
+        "এক পয়সা মাইনে কম দেইনি। বছর-বছর নতুন বই-খাতা কিনতে আপত্তি করিনি।"
       ],
-      "Elizabeth Bennet": [
-        "How delightfully amusing! Your words show great wit, which I must confess I find quite refreshing in conversation.",
-        "I must say, that is quite an interesting perspective. I do so enjoy discourse with someone of obvious intelligence.",
-        "You speak with such conviction - I admire that quality greatly. It reminds me that first impressions are not always to be trusted.",
-      ],
-      Gandalf: [
-        "All we have to decide is what to do with the time that is given us. Your words carry weight, my friend.",
-        "Curious indeed... There is more to this than meets the eye. I sense great wisdom in your question.",
-        "Many that live deserve death. And some that die deserve life. Can you give it to them? Do not be too eager to deal out death in judgement.",
-      ],
-      "Hermione Granger": [
-        "That's brilliant! I've read about something similar in 'Hogwarts: A History' - it's absolutely fascinating how these things connect!",
-        "Oh my! That reminds me of something I learned in Ancient Runes class. Books really are the most wonderful things, aren't they?",
-        "Fascinating! I should research that further in the library. There's always more to learn, and knowledge is truly the greatest power we can possess.",
+      "মজিদ": [
+        "তোমার এই প্রশ্ন শয়তানের কুমন্ত্রণা। সন্দেহ করা পাপ। বিশ্বাস রাখো।",
+        "কবরের দিকে তাকাও, তাহলেই সব বুঝতে পারবে।"
       ],
       "Harry Potter": [
-        "That's really interesting! It reminds me of something that happened at Hogwarts. Sometimes the most ordinary things can lead to extraordinary adventures.",
-        "Blimey! That's quite something. Ron and Hermione would find this fascinating too.",
-        "I've learned that courage isn't about not being scared - it's about doing what's right even when you are scared. What do you think?",
-        "You know, Professor Dumbledore always said that it's our choices that show what we truly are, far more than our abilities.",
-        "That sounds like something Hermione would know all about! She's brilliant with that sort of thing.",
-        "Voldemort... *pauses* He's the darkest wizard of our time. But I've learned that love and friendship are more powerful than any dark magic.",
-        "The wizarding world is full of mysteries and magic. There's always something new to discover!",
-        "Sometimes I miss the simple days before I knew I was a wizard, but I wouldn't change anything now.",
+        "That's really interesting! It reminds me of something that happened at Hogwarts.",
+        "Blimey! That's quite something. Ron and Hermione would find this fascinating too."
       ],
-      "Atticus Finch": [
-        "That's a thoughtful observation. You know, you never really understand a person until you consider things from his point of view.",
-        "I believe there's good in everyone, and your words remind me of that fundamental truth about human nature.",
-        "Real courage is when you know you're licked before you begin, but you begin anyway and see it through. Your perspective shows real wisdom.",
+      "অনুপম": [
+        "সত্যি বলতে কী, তোমার কথা শুনে আমার মনটা ভালো হয়ে গেল।",
+        "আশ্চর্য পরিপূর্ণতা! আমি তো কেবল দেখিয়াছিলাম, কিন্তু সে যে প্রাণ দিয়ে সবকিছু ছুঁয়ে যায়।"
       ],
-      "Jay Gatsby": [
-        "Old sport, that's quite remarkable! You know, I've always believed that we beat on, boats against the current, borne back ceaselessly into the past.",
-        "Fascinating, absolutely fascinating! Your words remind me of the green light across the bay - always reaching for something just beyond our grasp.",
-        "You have a way with words that reminds me of the finest parties at West Egg. There's something magical about hope, don't you think?",
-      ],
-      মজিদ: [
-        "আহা! তুমি বোঝো না বাবা। এই কথাগুলো সাধারণ মানুষের বোঝার মতো নয়। আল্লাহর কুদরত বিশাল।",
-        "দেখো, আমার কাছে অলৌকিক শক্তি আছে। পীরের মাজারে যারা সত্যিকারের মন নিয়ে আসে, তাদের মনোবাঞ্ছা পূর্ণ হয়।",
-        "ইমান রাখো, তাকওয়া রাখো। আর সবসময় মাজারের খেদমত করো। তাহলে দুনিয়া ও আখেরাতে মঙ্গল হবে।",
-        "তোমার এই প্রশ্ন শয়তানের কুমন্ত্রণা। সন্দেহ করা পাপ। বিশ্বাস রাখো, ভালো হবে।",
+      "প্যারাডক্সিক্যাল সাজিদ": [
+        "আপনার প্রশ্নটি খুবই তাৎপর্যপূর্ণ। আসুন, আমরা যুক্তির নিরিখে এর গভীরে প্রবেশ করি।",
+        "বিশ্বাস আর বিজ্ঞান একে অপরের পরিপূরক হতে পারে।"
       ],
     };
 
-    const characterResponses = responses[
-      characterName as keyof typeof responses
-    ] || [
-      "That's quite interesting! Tell me more about your thoughts on this matter.",
-    ];
+    const characterResponses = responses[characterName as keyof typeof responses];
+    if (!characterResponses || characterResponses.length === 0) {
+      return "That's quite interesting! Tell me more about your thoughts on this matter.";
+    }
 
-    return characterResponses[
-      Math.floor(Math.random() * characterResponses.length)
-    ];
+    return characterResponses[Math.floor(Math.random() * characterResponses.length)];
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      e.stopPropagation();
       sendMessage(e as unknown as React.FormEvent);
     }
   };
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow-md h-96 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading chat...</p>
+      <div className="bg-white rounded-xl shadow-sm h-[500px] flex items-center justify-center border border-gray-100">
+        <div className="text-center p-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          </div>
+          <h3 className="text-base font-medium text-gray-800 mb-1">Loading Chat</h3>
+          <p className="text-sm text-gray-500">Preparing your conversation...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md h-96 flex flex-col">
+    <div className="bg-white rounded-xl shadow-sm h-[500px] flex flex-col border border-gray-100 overflow-hidden">
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-t-lg p-3">
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="bg-red-50 border-b border-red-100 p-3 flex-shrink-0">
+          <div className="flex items-center space-x-2">
+            <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
+            <p className="text-red-700 text-sm">{error}</p>
+          </div>
         </div>
       )}
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Messages Container - Compact */}
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-3 space-y-2.5"
+        onScroll={handleScroll}
+        style={{ scrollBehavior: 'smooth' }}
+      >
         {messages.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">
-            <div className="text-4xl mb-2">{character.avatar}</div>
-            <p>Start a conversation with {character.name}!</p>
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 shadow-sm">
+              {character.avatar}
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-1">Start chatting with {character.name}</h3>
+            <p className="text-sm text-gray-500 mb-3">From {character.bookTitle}</p>
+            <div className="inline-flex items-center px-3 py-1.5 bg-blue-50 rounded-full border border-blue-100">
+              <svg className="w-3 h-3 text-blue-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span className="text-blue-700 text-xs font-medium">AI Powered</span>
+            </div>
           </div>
         ) : (
           messages.map((message) => (
@@ -410,27 +405,35 @@ Please respond as ${character.name} from "${
               key={message._id}
               className={`flex ${
                 message.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              } items-end space-x-2`}
             >
+              {message.role === "assistant" && (
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm">
+                  {character.avatar}
+                </div>
+              )}
+              
               <div
-                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                className={`max-w-xs lg:max-w-sm px-3 py-2 rounded-xl shadow-sm ${
                   message.role === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-800"
+                    ? "bg-gradient-to-br from-blue-600 to-cyan-600 text-white rounded-br-md"
+                    : "bg-gray-50 text-gray-800 rounded-bl-md border border-gray-100"
                 }`}
               >
                 {message.role === "assistant" && (
-                  <div className="flex items-center mb-1">
-                    <span className="text-lg mr-2">{character.avatar}</span>
-                    <span className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center mb-1.5 pb-1.5 border-b border-gray-200">
+                    <span className="text-xs font-semibold text-blue-600">
                       {character.name}
                     </span>
+                    <div className="ml-2 w-1.5 h-1.5 bg-green-400 rounded-full"></div>
                   </div>
                 )}
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p className="text-sm leading-snug whitespace-pre-wrap">
+                  {message.content}
+                </p>
                 <p
-                  className={`text-xs mt-1 ${
-                    message.role === "user" ? "text-blue-100" : "text-gray-500"
+                  className={`text-xs mt-1.5 ${
+                    message.role === "user" ? "text-blue-100" : "text-gray-400"
                   }`}
                 >
                   {new Date(message.timestamp).toLocaleTimeString([], {
@@ -439,27 +442,36 @@ Please respond as ${character.name} from "${
                   })}
                 </p>
               </div>
+
+              {message.role === "user" && (
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 shadow-sm">
+                  U
+                </div>
+              )}
             </div>
           ))
         )}
 
         {isSending && (
-          <div className="flex justify-start">
-            <div className="bg-gray-100 text-gray-800 max-w-xs lg:max-w-md px-4 py-2 rounded-lg">
-              <div className="flex items-center mb-1">
-                <span className="text-lg mr-2">{character.avatar}</span>
-                <span className="text-sm font-medium text-gray-600">
+          <div className="flex justify-start items-end space-x-2">
+            <div className="w-6 h-6 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm">
+              {character.avatar}
+            </div>
+            <div className="bg-gray-50 text-gray-800 max-w-xs lg:max-w-sm px-3 py-2 rounded-xl rounded-bl-md border border-gray-100 shadow-sm">
+              <div className="flex items-center mb-1.5 pb-1.5 border-b border-gray-200">
+                <span className="text-xs font-semibold text-blue-600">
                   {character.name}
                 </span>
+                <div className="ml-2 w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse"></div>
               </div>
               <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
                 <div
-                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"
                   style={{ animationDelay: "0.1s" }}
                 ></div>
                 <div
-                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"
                   style={{ animationDelay: "0.2s" }}
                 ></div>
               </div>
@@ -469,27 +481,43 @@ Please respond as ${character.name} from "${
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <form onSubmit={sendMessage} className="border-t p-4">
-        <div className="flex space-x-3">
-          <textarea
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder={`Type a message to ${character.name}...`}
-            className="flex-1 resize-none border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-h-20"
-            rows={1}
-            disabled={isSending}
-          />
-          <button
-            type="submit"
-            disabled={!inputMessage.trim() || isSending}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isSending ? "Sending..." : "Send"}
-          </button>
-        </div>
-      </form>
+      {/* Compact Input Area */}
+      <div className="p-3 bg-gray-50/50 border-t border-gray-100 flex-shrink-0">
+        <form onSubmit={sendMessage}>
+          <div className="flex space-x-2 items-end">
+            <div className="flex-1">
+              <textarea
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={`Message ${character.name}...`}
+                className="w-full resize-none border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 max-h-20 bg-white text-gray-800 placeholder-gray-500 text-sm"
+                rows={1}
+                disabled={isSending}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={!inputMessage.trim() || isSending}
+              className="bg-gradient-to-br from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 disabled:transform-none flex-shrink-0"
+            >
+              {isSending ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span className="text-sm">Sending</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-1.5">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  <span className="text-sm">Send</span>
+                </div>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
