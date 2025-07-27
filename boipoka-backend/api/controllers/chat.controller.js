@@ -29,6 +29,8 @@ const getChatById = async (req, res) => {
     const { id } = req.params;
     const userId = req.user._id;
 
+    console.log("getChatById called for ID:", id, "User:", userId);
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return sendError(res, HTTP.BAD_REQUEST, "Invalid chat ID");
     }
@@ -40,8 +42,11 @@ const getChatById = async (req, res) => {
     }).populate("user", "displayName username avatar");
 
     if (!chat) {
+      console.log("Chat not found for ID:", id, "User:", userId);
       return sendError(res, HTTP.NOT_FOUND, "Chat not found");
     }
+
+    console.log("Chat found. Messages count:", chat.messages?.length || 0);
 
     return sendSuccess(res, HTTP.OK, "Chat fetched successfully", { chat });
   } catch (err) {
@@ -71,15 +76,34 @@ const createChat = async (req, res) => {
     }
 
     // Check if a chat with this character already exists
+    console.log(
+      "Looking for existing chat for user:",
+      userId,
+      "character:",
+      character.name,
+      "book:",
+      character.bookTitle
+    );
+
     const existingChat = await Chat.findOne({
       user: userId,
       "character.name": character.name,
       "character.bookTitle": character.bookTitle,
       isActive: true,
-    });
+    }).sort({ updatedAt: -1 }); // Get the most recent one
+
+    console.log(
+      "Existing chat found:",
+      existingChat ? existingChat._id : "None"
+    );
 
     if (existingChat) {
       await existingChat.populate("user", "displayName username avatar");
+      console.log(
+        "Returning existing chat with",
+        existingChat.messages?.length || 0,
+        "messages"
+      );
       return sendSuccess(res, HTTP.OK, "Existing chat found", {
         chat: existingChat,
         isExisting: true,

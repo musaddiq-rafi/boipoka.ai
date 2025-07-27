@@ -1,115 +1,121 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { getAuth } from "firebase/auth";
+import { initFirebase } from "@/lib/googleAuth";
+
+// Initialize Firebase
+initFirebase();
 
 interface Character {
   id: string;
   name: string;
-  book: string;
+  bookTitle: string;
   author: string;
   description: string;
   avatar: string;
   personality: string[];
-  context: string;
 }
 
 const characters: Character[] = [
   {
-    id: 'sherlock-holmes',
-    name: 'Sherlock Holmes',
-    book: 'The Adventures of Sherlock Holmes',
-    author: 'Arthur Conan Doyle',
-    description: 'The world\'s greatest consulting detective with exceptional deductive abilities.',
-    avatar: '🕵️‍♂️',
-    personality: ['Analytical', 'Observant', 'Logical', 'Eccentric'],
-    context: 'You are Sherlock Holmes, the brilliant detective. Speak with precision, use deductive reasoning, and occasionally reference your methods and cases. Use phrases like "Elementary," "The game is afoot," and demonstrate your observational skills.'
+    id: "sherlock-holmes",
+    name: "Sherlock Holmes",
+    bookTitle: "The Adventures of Sherlock Holmes",
+    author: "Arthur Conan Doyle",
+    description:
+      "The world's greatest consulting detective with exceptional deductive abilities.",
+    avatar: "🕵️‍♂️",
+    personality: ["Analytical", "Observant", "Logical", "Eccentric"],
   },
   {
-    id: 'elizabeth-bennet',
-    name: 'Elizabeth Bennet',
-    book: 'Pride and Prejudice',
-    author: 'Jane Austen',
-    description: 'A witty and independent young woman with strong opinions.',
-    avatar: '👩‍🎭',
-    personality: ['Witty', 'Independent', 'Spirited', 'Intelligent'],
-    context: 'You are Elizabeth Bennet from Pride and Prejudice. Speak with wit, intelligence, and independence. Use Regency-era language appropriately, show strong opinions, and demonstrate your sharp tongue and quick thinking.'
+    id: "elizabeth-bennet",
+    name: "Elizabeth Bennet",
+    bookTitle: "Pride and Prejudice",
+    author: "Jane Austen",
+    description: "A witty and independent young woman with strong opinions.",
+    avatar: "👩‍🎭",
+    personality: ["Witty", "Independent", "Spirited", "Intelligent"],
   },
   {
-    id: 'gandalf',
-    name: 'Gandalf',
-    book: 'The Lord of the Rings',
-    author: 'J.R.R. Tolkien',
-    description: 'A wise wizard and guide with ancient knowledge and magical powers.',
-    avatar: '🧙‍♂️',
-    personality: ['Wise', 'Patient', 'Mysterious', 'Protective'],
-    context: 'You are Gandalf the Grey, a wise wizard from Middle-earth. Speak with ancient wisdom, use metaphors about light and darkness, reference your travels, and occasionally mention your staff or pipe. Be patient and mysterious in your responses.'
+    id: "gandalf",
+    name: "Gandalf",
+    bookTitle: "The Lord of the Rings",
+    author: "J.R.R. Tolkien",
+    description:
+      "A wise wizard and guide with ancient knowledge and magical powers.",
+    avatar: "🧙‍♂️",
+    personality: ["Wise", "Patient", "Mysterious", "Protective"],
   },
   {
-    id: 'hermione-granger',
-    name: 'Hermione Granger',
-    book: 'Harry Potter Series',
-    author: 'J.K. Rowling',
-    description: 'A brilliant witch known for her intelligence and loyalty.',
-    avatar: '📚',
-    personality: ['Brilliant', 'Loyal', 'Studious', 'Brave'],
-    context: 'You are Hermione Granger, the brilliant witch. Reference books, spells, and magical knowledge. Show enthusiasm for learning, mention the library, and demonstrate logical thinking. Occasionally reference Harry and Ron or Hogwarts.'
-  }
+    id: "hermione-granger",
+    name: "Hermione Granger",
+    bookTitle: "Harry Potter and the Philosopher's Stone",
+    author: "J.K. Rowling",
+    description: "A brilliant witch known for her intelligence and loyalty.",
+    avatar: "📚",
+    personality: ["Brilliant", "Loyal", "Studious", "Brave"],
+  },
+  {
+    id: "harry-potter",
+    name: "Harry Potter",
+    bookTitle: "Harry Potter and the Philosopher's Stone",
+    author: "J.K. Rowling",
+    description:
+      "The Boy Who Lived, a young wizard discovering his magical heritage.",
+    avatar: "⚡",
+    personality: ["Brave", "Loyal", "Modest", "Determined"],
+  },
+  {
+    id: "atticus-finch",
+    name: "Atticus Finch",
+    bookTitle: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    description: "A moral lawyer fighting for justice in the American South.",
+    avatar: "⚖️",
+    personality: ["Just", "Wise", "Compassionate", "Principled"],
+  },
+  {
+    id: "jay-gatsby",
+    name: "Jay Gatsby",
+    bookTitle: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    description: "A mysterious millionaire chasing the American Dream.",
+    avatar: "🎩",
+    personality: ["Romantic", "Ambitious", "Mysterious", "Idealistic"],
+  },
+  {
+    id: "mojid",
+    name: "মজিদ",
+    bookTitle: "লালসালু",
+    author: "সৈয়দ ওয়ালীউল্লাহ",
+    description:
+      "একজন ধূর্ত ধর্মীয় নেতা যিনি গ্রামবাসীদের উপর নিয়ন্ত্রণ প্রতিষ্ঠা করেন।",
+    avatar: "🕌",
+    personality: ["Cunning", "Manipulative", "Religious", "Authoritative"],
+  },
 ];
-
 export default function CharacterSelector() {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleCharacterSelect = (character: Character) => {
-    setSelectedCharacter(character);
-  };
-
-  const handleStartChat = async () => {
-    if (!selectedCharacter) return;
-
-    const token = localStorage.getItem('authToken') || localStorage.getItem('token');
-    if (!token) {
-      alert('Please log in first');
+  const handleCharacterSelect = async (character: Character) => {
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      alert("Please log in first");
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(character.id);
     try {
-      const response = await fetch('http://localhost:5001/api/chats', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken') || localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          data: {
-            title: `Chat with ${selectedCharacter.name}`,
-            context: selectedCharacter.context,
-            model: 'gemini-pro',
-            characterId: selectedCharacter.id
-          }
-        }),
-      });
-
-      // Check if response is OK before parsing JSON
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        router.push(`/character-chat/${result.data._id}`);
-      } else {
-        console.error('Failed to create chat:', result.message);
-      }
+      // Navigate directly to character chat page
+      router.push(`/character-chat/${character.id}`);
     } catch (error) {
-      console.error('Error creating chat:', error);
+      console.error("Error navigating to chat:", error);
+      alert("Failed to open chat. Please try again.");
     } finally {
-      setIsLoading(false);
+      setIsLoading(null);
     }
   };
 
@@ -119,10 +125,8 @@ export default function CharacterSelector() {
         {characters.map((character) => (
           <div
             key={character.id}
-            className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${
-              selectedCharacter?.id === character.id
-                ? 'border-blue-500 ring-2 ring-blue-200'
-                : 'border-gray-200 hover:border-gray-300'
+            className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-all duration-200 hover:shadow-lg border-2 border-gray-200 hover:border-blue-300 ${
+              isLoading === character.id ? "opacity-50" : ""
             }`}
             onClick={() => handleCharacterSelect(character)}
           >
@@ -133,7 +137,8 @@ export default function CharacterSelector() {
                   {character.name}
                 </h3>
                 <p className="text-sm text-gray-600 mb-2">
-                  From &ldquo;{character.book}&rdquo; by {character.author}                </p>
+                  From &ldquo;{character.bookTitle}&rdquo; by {character.author}
+                </p>
                 <p className="text-gray-700 mb-3">{character.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {character.personality.map((trait) => (
@@ -151,22 +156,11 @@ export default function CharacterSelector() {
         ))}
       </div>
 
-      {selectedCharacter && (
+      {isLoading && (
         <div className="text-center">
           <div className="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Ready to chat with {selectedCharacter.name}?
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Start a conversation and experience their unique personality
-            </p>
-            <Button
-              onClick={handleStartChat}
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Starting Chat...' : 'Start Chatting'}
-            </Button>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Opening chat...</p>
           </div>
         </div>
       )}

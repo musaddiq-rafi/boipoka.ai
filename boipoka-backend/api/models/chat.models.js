@@ -10,7 +10,7 @@ const messageSchema = new mongoose.Schema(
     content: {
       type: String,
       required: true,
-      maxlength: 1000, // Adjust based on your needs
+      maxlength: 5000, // Increased to allow longer AI responses
     },
     timestamp: {
       type: Date,
