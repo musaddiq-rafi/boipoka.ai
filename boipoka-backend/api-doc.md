@@ -37,6 +37,7 @@ Ex-
 - #### [Reading List](#reading-list-routes)
 - #### [Blogs](#blog-routes)
 - #### [Discussions](#discussion-routes)
+- #### [Chats](#chat-routes)
 
 
 ---
@@ -1687,6 +1688,667 @@ Sample response:
 {
     "success": true,
     "message": "Discussion deleted successfully",
+    "data": {}
+}
+```
+
+---
+
+## Chat Routes
+
+### List User's Chats
+
+**GET** `/api/chats`
+
+**Query Parameters (optional):**
+
+* `page=<number>` — Page number for pagination (defaults to 1).
+* `limit=<number>` — Number of chats per page (defaults to 10).
+
+**Behavior:**
+
+* Returns all **active** character chats of the authenticated user.
+* Results are sorted by most recently updated first.
+* Messages are excluded from the response for performance (use individual chat endpoint to get messages).
+* Each chat represents a conversation with a specific book character.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Chats fetched successfully",
+  "data": {
+    "chats": [ /* Array of character chat objects without messages */ ]
+  }
+}
+```
+
+<br>
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "Chats fetched successfully",
+    "data": {
+        "chats": [
+            {
+                "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+                "user": {
+                    "_id": "6843292c5cc2e9ee0b9bc0a9",
+                    "username": "bookworm",
+                    "displayName": "BookWorm",
+                    "avatar": "https://lh3.googleusercontent.com/..."
+                },
+                "character": {
+                    "name": "Harry Potter",
+                    "bookTitle": "Harry Potter and the Philosopher's Stone",
+                    "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                    "avatar": "https://example.com/harry-potter-avatar.jpg"
+                },
+                "title": "Chat with Harry Potter",
+                "context": "Discussing magic and Hogwarts life",
+                "model": "gemini-pro",
+                "isActive": true,
+                "metadata": {
+                    "totalTokens": 150,
+                    "totalMessages": 4
+                },
+                "createdAt": "2025-07-26T10:30:00.000Z",
+                "updatedAt": "2025-07-26T11:45:00.000Z"
+            }
+        ]
+    }
+}
+```
+
+---
+
+### Get User's Characters
+
+**GET** `/api/chats/characters`
+
+**Behavior:**
+
+* Returns all book characters the authenticated user has chatted with.
+* Shows summary information including last chat date and total messages.
+* Useful for displaying a character selection screen.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "User characters fetched successfully",
+  "data": {
+    "characters": [ /* Array of character objects with chat summary */ ]
+  }
+}
+```
+
+<br>
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "User characters fetched successfully",
+    "data": {
+        "characters": [
+            {
+                "character": {
+                    "name": "Harry Potter",
+                    "bookTitle": "Harry Potter and the Philosopher's Stone",
+                    "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                    "avatar": "https://example.com/harry-potter-avatar.jpg"
+                },
+                "lastChatDate": "2025-07-26T11:45:00.000Z",
+                "totalMessages": 12
+            },
+            {
+                "character": {
+                    "name": "Hermione Granger",
+                    "bookTitle": "Harry Potter and the Philosopher's Stone",
+                    "description": "Brilliant witch and Harry's best friend",
+                    "avatar": "https://example.com/hermione-avatar.jpg"
+                },
+                "lastChatDate": "2025-07-25T09:20:00.000Z",
+                "totalMessages": 8
+            }
+        ]
+    }
+}
+```
+
+---
+
+### Get Chat by ID
+
+**GET** `/api/chats/:id`
+
+**Behavior:**
+
+* Returns a specific chat with all messages if it belongs to the authenticated user.
+* Only the chat owner can access their chat.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Chat fetched successfully",
+  "data": {
+    "chat": { /* Complete chat object with messages */ }
+  }
+}
+```
+
+<br>
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "Chat fetched successfully",
+    "data": {
+        "chat": {
+            "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+            "user": {
+                "_id": "6843292c5cc2e9ee0b9bc0a9",
+                "username": "bookworm",
+                "displayName": "BookWorm",
+                "avatar": "https://lh3.googleusercontent.com/..."
+            },
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Tell me about Quidditch!",
+            "context": "Discussing magic and Hogwarts life",
+            "model": "gemini-pro",
+            "isActive": true,
+            "messages": [
+                {
+                    "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
+                    "role": "user",
+                    "content": "Tell me about Quidditch!",
+                    "timestamp": "2025-07-26T10:30:00.000Z"
+                },
+                {
+                    "_id": "60f1b2c3d4e5f6a7b8c9d0e3",
+                    "role": "assistant",
+                    "content": "Quidditch is the most popular wizarding sport! It's played on flying broomsticks with four balls and seven players per team...",
+                    "timestamp": "2025-07-26T10:30:15.000Z"
+                }
+            ],
+            "metadata": {
+                "totalTokens": 150,
+                "totalMessages": 2
+            },
+            "createdAt": "2025-07-26T10:30:00.000Z",
+            "updatedAt": "2025-07-26T10:30:15.000Z"
+        }
+    }
+}
+```
+
+---
+
+### Get Chat History
+
+**GET** `/api/chats/:id/history`
+
+**Query Parameters (optional):**
+
+* `limit=<number>` — Number of recent messages to retrieve (defaults to 20).
+
+**Behavior:**
+
+* Returns formatted conversation history suitable for AI API calls.
+* Only returns the most recent messages up to the specified limit.
+* Only the chat owner can access their chat history.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Chat history fetched successfully",
+  "data": {
+    "history": [ /* Array of formatted messages for AI API */ ],
+    "chatId": "60f1b2c3d4e5f6a7b8c9d0e1",
+    "title": "Chat title"
+  }
+}
+```
+
+<br>
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "Chat history fetched successfully",
+    "data": {
+        "history": [
+            {
+                "role": "user",
+                "content": "Tell me about Quidditch!"
+            },
+            {
+                "role": "assistant",
+                "content": "Quidditch is the most popular wizarding sport! It's played on flying broomsticks with four balls and seven players per team..."
+            }
+        ],
+        "chatId": "60f1b2c3d4e5f6a7b8c9d0e1",
+        "title": "Harry Potter: Tell me about Quidditch!"
+    }
+}
+```
+
+---
+
+### Create New Chat
+
+**POST** `/api/chats`
+
+**Input:** `req.body.data`
+
+```json
+{
+  "character": {
+    "name": "Harry Potter", // required
+    "bookTitle": "Harry Potter and the Philosopher's Stone", // required
+    "description": "The Boy Who Lived, a young wizard student at Hogwarts", // optional
+    "avatar": "https://example.com/harry-potter-avatar.jpg" // optional
+  },
+  "context": "Discussing magic and Hogwarts life", // optional
+  "model": "gemini-pro" // optional, defaults to "gemini-pro"
+}
+```
+
+**Behavior:**
+
+* Creates a new chat session with a specific book character for the authenticated user.
+* If a chat with the same character (name + book title combination) already exists, returns the existing chat instead of creating a new one.
+* This ensures users have persistent conversations with each character.
+* Chat starts with empty messages array for new chats.
+* Title will be auto-generated from the first user message.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+Content-Type: application/json
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Chat created successfully" | "Existing chat found",
+  "data": {
+    "chat": { /* Chat object */ },
+    "isExisting": true | false
+  }
+}
+```
+
+<br>
+
+Sample request:
+
+```json
+{
+    "data": {
+        "character": {
+            "name": "Harry Potter",
+            "bookTitle": "Harry Potter and the Philosopher's Stone",
+            "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+            "avatar": "https://example.com/harry-potter-avatar.jpg"
+        },
+        "context": "Discussing magic and Hogwarts life",
+        "model": "gemini-pro"
+    }
+}
+```
+
+Sample response (new chat):
+
+```json
+{
+    "success": true,
+    "message": "Chat created successfully",
+    "data": {
+        "chat": {
+            "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+            "user": {
+                "_id": "6843292c5cc2e9ee0b9bc0a9",
+                "username": "bookworm",
+                "displayName": "BookWorm",
+                "avatar": "https://lh3.googleusercontent.com/..."
+            },
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Chat with Harry Potter",
+            "context": "Discussing magic and Hogwarts life",
+            "model": "gemini-pro",
+            "messages": [],
+            "isActive": true,
+            "metadata": {
+                "totalTokens": 0,
+                "totalMessages": 0
+            },
+            "createdAt": "2025-07-26T10:30:00.000Z",
+            "updatedAt": "2025-07-26T10:30:00.000Z"
+        },
+        "isExisting": false
+    }
+}
+```
+
+Sample response (existing chat found):
+
+```json
+{
+    "success": true,
+    "message": "Existing chat found",
+    "data": {
+        "chat": {
+            "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Tell me about Quidditch!",
+            "messages": [
+                {
+                    "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
+                    "role": "user",
+                    "content": "Tell me about Quidditch!",
+                    "timestamp": "2025-07-26T10:30:00.000Z"
+                }
+            ],
+            "metadata": {
+                "totalTokens": 45,
+                "totalMessages": 2
+            }
+        },
+        "isExisting": true
+    }
+}
+```
+
+---
+
+### Add Message to Chat
+
+**POST** `/api/chats/:id/messages`
+
+**Input:** `req.body.data`
+
+```json
+{
+  "role": "user", // required: "user" or "assistant"
+  "content": "Tell me about Quidditch!" // required: message content
+}
+```
+
+**Behavior:**
+
+* Adds a new message to an existing character chat.
+* Only the chat owner can add messages to their chat.
+* Automatically updates the chat's metadata (total message count).
+* If the chat title is still the default format and this is the first user message, the title will be auto-generated to include the character name and message preview.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+Content-Type: application/json
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Message added successfully",
+  "data": {
+    "chat": { /* Updated chat object with new message */ }
+  }
+}
+```
+
+<br>
+
+Sample request:
+
+```json
+{
+    "data": {
+        "role": "user",
+        "content": "Tell me about Quidditch!"
+    }
+}
+```
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "Message added successfully",
+    "data": {
+        "chat": {
+            "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+            "user": {
+                "_id": "6843292c5cc2e9ee0b9bc0a9",
+                "username": "bookworm",
+                "displayName": "BookWorm",
+                "avatar": "https://lh3.googleusercontent.com/..."
+            },
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Tell me about Quidditch!",
+            "context": "Discussing magic and Hogwarts life",
+            "model": "gemini-pro",
+            "messages": [
+                {
+                    "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
+                    "role": "user",
+                    "content": "Tell me about Quidditch!",
+                    "timestamp": "2025-07-26T10:30:00.000Z"
+                }
+            ],
+            "isActive": true,
+            "metadata": {
+                "totalTokens": 0,
+                "totalMessages": 1
+            },
+            "createdAt": "2025-07-26T10:30:00.000Z",
+            "updatedAt": "2025-07-26T10:30:00.000Z"
+        }
+    }
+}
+```
+
+---
+
+### Update Chat
+
+**PATCH** `/api/chats/:id`
+
+**Input:** `req.body.data`
+Any one or multiple of the following fields can be updated:
+
+```json
+{
+  "title": "Updated Chat Title",
+  "context": "Updated context about the chat",
+  "model": "gemini-pro-vision"
+}
+```
+
+**Behavior:**
+
+* Only the **owner** can update their chat.
+* Fields like `title`, `context`, and `model` can be updated.
+* Messages cannot be updated through this endpoint (use the add message endpoint).
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+Content-Type: application/json
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Chat updated successfully",
+  "data": {
+    "chat": { /* Updated chat object */ }
+  }
+}
+```
+
+<br>
+
+Sample request:
+
+```json
+{
+    "data": {
+        "title": "Harry Potter: Magical Creatures Discussion",
+        "context": "Discussing magical creatures and spells with Harry"
+    }
+}
+```
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "Chat updated successfully",
+    "data": {
+        "chat": {
+            "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+            "user": {
+                "_id": "6843292c5cc2e9ee0b9bc0a9",
+                "username": "bookworm",
+                "displayName": "BookWorm",
+                "avatar": "https://lh3.googleusercontent.com/..."
+            },
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Magical Creatures Discussion",
+            "context": "Discussing magical creatures and spells with Harry",
+            "model": "gemini-pro",
+            "messages": [
+                {
+                    "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
+                    "role": "user",
+                    "content": "Tell me about Quidditch!",
+                    "timestamp": "2025-07-26T10:30:00.000Z"
+                }
+            ],
+            "isActive": true,
+            "metadata": {
+                "totalTokens": 0,
+                "totalMessages": 1
+            },
+            "createdAt": "2025-07-26T10:30:00.000Z",
+            "updatedAt": "2025-07-26T11:00:00.000Z"
+        }
+    }
+}
+```
+
+---
+
+### Delete Chat
+
+**DELETE** `/api/chats/:id`
+
+**Behavior:**
+
+* Only the **owner** can delete their chat.
+* Performs a soft delete by setting `isActive` to `false`.
+* Chat data is preserved but will not appear in chat lists.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "Chat deleted successfully"
+}
+```
+
+<br>
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "Chat deleted successfully",
     "data": {}
 }
 ```

@@ -59,11 +59,41 @@ const createChat = async (req, res) => {
       return sendError(res, HTTP.BAD_REQUEST, "Missing chat data");
     }
 
-    const { title, context, model = "gemini-pro" } = data;
+    const { character, context, model = "gemini-pro" } = data;
+
+    // Validate character data
+    if (!character || !character.name || !character.bookTitle) {
+      return sendError(
+        res,
+        HTTP.BAD_REQUEST,
+        "Character name and book title are required"
+      );
+    }
+
+    // Check if a chat with this character already exists
+    const existingChat = await Chat.findOne({
+      user: userId,
+      "character.name": character.name,
+      "character.bookTitle": character.bookTitle,
+      isActive: true,
+    });
+
+    if (existingChat) {
+      await existingChat.populate("user", "displayName username avatar");
+      return sendSuccess(res, HTTP.OK, "Existing chat found", {
+        chat: existingChat,
+        isExisting: true,
+      });
+    }
 
     const newChat = new Chat({
       user: userId,
-      title: title || "New Chat",
+      character: {
+        name: character.name,
+        bookTitle: character.bookTitle,
+        description: character.description || "",
+        avatar: character.avatar || "",
+      },
       context,
       model,
       messages: [],
@@ -79,6 +109,7 @@ const createChat = async (req, res) => {
 
     return sendSuccess(res, HTTP.CREATED, "Chat created successfully", {
       chat: newChat,
+      isExisting: false,
     });
   } catch (err) {
     logError("Failed to create chat", err);
@@ -184,6 +215,25 @@ const deleteChat = async (req, res) => {
   }
 };
 
+const getUserCharacters = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const characters = await Chat.getUserCharacters(userId);
+
+    return sendSuccess(res, HTTP.OK, "User characters fetched successfully", {
+      characters,
+    });
+  } catch (err) {
+    logError("Failed to fetch user characters", err);
+    return sendError(
+      res,
+      HTTP.INTERNAL_SERVER_ERROR,
+      "Failed to fetch user characters"
+    );
+  }
+};
+
 const getChatHistory = async (req, res) => {
   try {
     const { id } = req.params;
@@ -225,4 +275,5 @@ export const ChatController = {
   updateChat,
   deleteChat,
   getChatHistory,
+  getUserCharacters,
 };
