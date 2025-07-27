@@ -1707,9 +1707,10 @@ Sample response:
 
 **Behavior:**
 
-* Returns all **active** chats of the authenticated user.
+* Returns all **active** character chats of the authenticated user.
 * Results are sorted by most recently updated first.
 * Messages are excluded from the response for performance (use individual chat endpoint to get messages).
+* Each chat represents a conversation with a specific book character.
 
 **Headers:**
 
@@ -1724,7 +1725,7 @@ Authorization: Bearer <FIREBASE_ID_TOKEN>
   "success": true,
   "message": "Chats fetched successfully",
   "data": {
-    "chats": [ /* Array of chat objects without messages */ ]
+    "chats": [ /* Array of character chat objects without messages */ ]
   }
 }
 ```
@@ -1747,8 +1748,14 @@ Sample response:
                     "displayName": "BookWorm",
                     "avatar": "https://lh3.googleusercontent.com/..."
                 },
-                "title": "Can you recommend some sci-fi books?",
-                "context": "Looking for book recommendations",
+                "character": {
+                    "name": "Harry Potter",
+                    "bookTitle": "Harry Potter and the Philosopher's Stone",
+                    "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                    "avatar": "https://example.com/harry-potter-avatar.jpg"
+                },
+                "title": "Chat with Harry Potter",
+                "context": "Discussing magic and Hogwarts life",
                 "model": "gemini-pro",
                 "isActive": true,
                 "metadata": {
@@ -1757,6 +1764,71 @@ Sample response:
                 },
                 "createdAt": "2025-07-26T10:30:00.000Z",
                 "updatedAt": "2025-07-26T11:45:00.000Z"
+            }
+        ]
+    }
+}
+```
+
+---
+
+### Get User's Characters
+
+**GET** `/api/chats/characters`
+
+**Behavior:**
+
+* Returns all book characters the authenticated user has chatted with.
+* Shows summary information including last chat date and total messages.
+* Useful for displaying a character selection screen.
+
+**Headers:**
+
+```
+Authorization: Bearer <FIREBASE_ID_TOKEN>
+```
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "message": "User characters fetched successfully",
+  "data": {
+    "characters": [ /* Array of character objects with chat summary */ ]
+  }
+}
+```
+
+<br>
+
+Sample response:
+
+```json
+{
+    "success": true,
+    "message": "User characters fetched successfully",
+    "data": {
+        "characters": [
+            {
+                "character": {
+                    "name": "Harry Potter",
+                    "bookTitle": "Harry Potter and the Philosopher's Stone",
+                    "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                    "avatar": "https://example.com/harry-potter-avatar.jpg"
+                },
+                "lastChatDate": "2025-07-26T11:45:00.000Z",
+                "totalMessages": 12
+            },
+            {
+                "character": {
+                    "name": "Hermione Granger",
+                    "bookTitle": "Harry Potter and the Philosopher's Stone",
+                    "description": "Brilliant witch and Harry's best friend",
+                    "avatar": "https://example.com/hermione-avatar.jpg"
+                },
+                "lastChatDate": "2025-07-25T09:20:00.000Z",
+                "totalMessages": 8
             }
         ]
     }
@@ -1809,21 +1881,27 @@ Sample response:
                 "displayName": "BookWorm",
                 "avatar": "https://lh3.googleusercontent.com/..."
             },
-            "title": "Can you recommend some sci-fi books?",
-            "context": "Looking for book recommendations",
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Tell me about Quidditch!",
+            "context": "Discussing magic and Hogwarts life",
             "model": "gemini-pro",
             "isActive": true,
             "messages": [
                 {
                     "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
                     "role": "user",
-                    "content": "Can you recommend some sci-fi books?",
+                    "content": "Tell me about Quidditch!",
                     "timestamp": "2025-07-26T10:30:00.000Z"
                 },
                 {
                     "_id": "60f1b2c3d4e5f6a7b8c9d0e3",
                     "role": "assistant",
-                    "content": "I'd be happy to recommend some excellent sci-fi books! Here are a few classics and modern favorites...",
+                    "content": "Quidditch is the most popular wizarding sport! It's played on flying broomsticks with four balls and seven players per team...",
                     "timestamp": "2025-07-26T10:30:15.000Z"
                 }
             ],
@@ -1886,15 +1964,15 @@ Sample response:
         "history": [
             {
                 "role": "user",
-                "content": "Can you recommend some sci-fi books?"
+                "content": "Tell me about Quidditch!"
             },
             {
                 "role": "assistant",
-                "content": "I'd be happy to recommend some excellent sci-fi books! Here are a few classics and modern favorites..."
+                "content": "Quidditch is the most popular wizarding sport! It's played on flying broomsticks with four balls and seven players per team..."
             }
         ],
         "chatId": "60f1b2c3d4e5f6a7b8c9d0e1",
-        "title": "Can you recommend some sci-fi books?"
+        "title": "Harry Potter: Tell me about Quidditch!"
     }
 }
 ```
@@ -1909,17 +1987,24 @@ Sample response:
 
 ```json
 {
-  "title": "Book Recommendations", // optional, defaults to "New Chat"
-  "context": "Discussion about sci-fi books", // optional
+  "character": {
+    "name": "Harry Potter", // required
+    "bookTitle": "Harry Potter and the Philosopher's Stone", // required
+    "description": "The Boy Who Lived, a young wizard student at Hogwarts", // optional
+    "avatar": "https://example.com/harry-potter-avatar.jpg" // optional
+  },
+  "context": "Discussing magic and Hogwarts life", // optional
   "model": "gemini-pro" // optional, defaults to "gemini-pro"
 }
 ```
 
 **Behavior:**
 
-* Creates a new chat session for the authenticated user.
-* Chat starts with empty messages array.
-* Title will be auto-generated from the first user message if not provided or left as "New Chat".
+* Creates a new chat session with a specific book character for the authenticated user.
+* If a chat with the same character (name + book title combination) already exists, returns the existing chat instead of creating a new one.
+* This ensures users have persistent conversations with each character.
+* Chat starts with empty messages array for new chats.
+* Title will be auto-generated from the first user message.
 
 **Headers:**
 
@@ -1933,9 +2018,10 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "Chat created successfully",
+  "message": "Chat created successfully" | "Existing chat found",
   "data": {
-    "chat": { /* Newly created chat object */ }
+    "chat": { /* Chat object */ },
+    "isExisting": true | false
   }
 }
 ```
@@ -1947,14 +2033,19 @@ Sample request:
 ```json
 {
     "data": {
-        "title": "Book Recommendations",
-        "context": "Looking for sci-fi book suggestions",
+        "character": {
+            "name": "Harry Potter",
+            "bookTitle": "Harry Potter and the Philosopher's Stone",
+            "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+            "avatar": "https://example.com/harry-potter-avatar.jpg"
+        },
+        "context": "Discussing magic and Hogwarts life",
         "model": "gemini-pro"
     }
 }
 ```
 
-Sample response:
+Sample response (new chat):
 
 ```json
 {
@@ -1969,8 +2060,14 @@ Sample response:
                 "displayName": "BookWorm",
                 "avatar": "https://lh3.googleusercontent.com/..."
             },
-            "title": "Book Recommendations",
-            "context": "Looking for sci-fi book suggestions",
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Chat with Harry Potter",
+            "context": "Discussing magic and Hogwarts life",
             "model": "gemini-pro",
             "messages": [],
             "isActive": true,
@@ -1980,7 +2077,42 @@ Sample response:
             },
             "createdAt": "2025-07-26T10:30:00.000Z",
             "updatedAt": "2025-07-26T10:30:00.000Z"
-        }
+        },
+        "isExisting": false
+    }
+}
+```
+
+Sample response (existing chat found):
+
+```json
+{
+    "success": true,
+    "message": "Existing chat found",
+    "data": {
+        "chat": {
+            "_id": "60f1b2c3d4e5f6a7b8c9d0e1",
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Tell me about Quidditch!",
+            "messages": [
+                {
+                    "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
+                    "role": "user",
+                    "content": "Tell me about Quidditch!",
+                    "timestamp": "2025-07-26T10:30:00.000Z"
+                }
+            ],
+            "metadata": {
+                "totalTokens": 45,
+                "totalMessages": 2
+            }
+        },
+        "isExisting": true
     }
 }
 ```
@@ -1996,16 +2128,16 @@ Sample response:
 ```json
 {
   "role": "user", // required: "user" or "assistant"
-  "content": "Can you recommend some sci-fi books?" // required: message content
+  "content": "Tell me about Quidditch!" // required: message content
 }
 ```
 
 **Behavior:**
 
-* Adds a new message to an existing chat.
+* Adds a new message to an existing character chat.
 * Only the chat owner can add messages to their chat.
 * Automatically updates the chat's metadata (total message count).
-* If the chat title is still "New Chat" and this is the first user message, the title will be auto-generated.
+* If the chat title is still the default format and this is the first user message, the title will be auto-generated to include the character name and message preview.
 
 **Headers:**
 
@@ -2034,7 +2166,7 @@ Sample request:
 {
     "data": {
         "role": "user",
-        "content": "Can you recommend some sci-fi books?"
+        "content": "Tell me about Quidditch!"
     }
 }
 ```
@@ -2054,14 +2186,20 @@ Sample response:
                 "displayName": "BookWorm",
                 "avatar": "https://lh3.googleusercontent.com/..."
             },
-            "title": "Can you recommend some sci-fi books?",
-            "context": "Looking for sci-fi book suggestions",
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Tell me about Quidditch!",
+            "context": "Discussing magic and Hogwarts life",
             "model": "gemini-pro",
             "messages": [
                 {
                     "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
                     "role": "user",
-                    "content": "Can you recommend some sci-fi books?",
+                    "content": "Tell me about Quidditch!",
                     "timestamp": "2025-07-26T10:30:00.000Z"
                 }
             ],
@@ -2126,8 +2264,8 @@ Sample request:
 ```json
 {
     "data": {
-        "title": "Science Fiction Book Discussion",
-        "context": "Comprehensive discussion about sci-fi literature"
+        "title": "Harry Potter: Magical Creatures Discussion",
+        "context": "Discussing magical creatures and spells with Harry"
     }
 }
 ```
@@ -2147,14 +2285,20 @@ Sample response:
                 "displayName": "BookWorm",
                 "avatar": "https://lh3.googleusercontent.com/..."
             },
-            "title": "Science Fiction Book Discussion",
-            "context": "Comprehensive discussion about sci-fi literature",
+            "character": {
+                "name": "Harry Potter",
+                "bookTitle": "Harry Potter and the Philosopher's Stone",
+                "description": "The Boy Who Lived, a young wizard student at Hogwarts",
+                "avatar": "https://example.com/harry-potter-avatar.jpg"
+            },
+            "title": "Harry Potter: Magical Creatures Discussion",
+            "context": "Discussing magical creatures and spells with Harry",
             "model": "gemini-pro",
             "messages": [
                 {
                     "_id": "60f1b2c3d4e5f6a7b8c9d0e2",
                     "role": "user",
-                    "content": "Can you recommend some sci-fi books?",
+                    "content": "Tell me about Quidditch!",
                     "timestamp": "2025-07-26T10:30:00.000Z"
                 }
             ],

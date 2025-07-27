@@ -6,6 +6,9 @@ const chatRoute = express.Router();
 // GET /api/chats - Get user's chat list
 chatRoute.get("/", ChatController.getChatsList);
 
+// GET /api/chats/characters - Get all characters the user has chatted with
+chatRoute.get("/characters", ChatController.getUserCharacters);
+
 // GET /api/chats/:id - Get specific chat with all messages
 chatRoute.get("/:id", ChatController.getChatById);
 
