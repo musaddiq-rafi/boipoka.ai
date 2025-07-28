@@ -19,75 +19,46 @@ interface Character {
   avatar: string;
 }
 
-// Character data (same as in CharacterSelector)
 const characters: Character[] = [
   {
-    id: "sherlock-holmes",
-    name: "Sherlock Holmes",
-    bookTitle: "The Adventures of Sherlock Holmes",
-    author: "Arthur Conan Doyle",
-    description:
-      "The world's greatest consulting detective with exceptional deductive abilities.",
-    avatar: "🕵️‍♂️",
-  },
-  {
-    id: "elizabeth-bennet",
-    name: "Elizabeth Bennet",
-    bookTitle: "Pride and Prejudice",
-    author: "Jane Austen",
-    description: "A witty and independent young woman with strong opinions.",
-    avatar: "👩‍🎭",
-  },
-  {
-    id: "gandalf",
-    name: "Gandalf",
-    bookTitle: "The Lord of the Rings",
-    author: "J.R.R. Tolkien",
-    description:
-      "A wise wizard and guide with ancient knowledge and magical powers.",
-    avatar: "🧙‍♂️",
-  },
-  {
-    id: "hermione-granger",
-    name: "Hermione Granger",
-    bookTitle: "Harry Potter and the Philosopher's Stone",
-    author: "J.K. Rowling",
-    description: "A brilliant witch known for her intelligence and loyalty.",
-    avatar: "📚",
-  },
-  {
-    id: "harry-potter",
-    name: "Harry Potter",
-    bookTitle: "Harry Potter and the Philosopher's Stone",
-    author: "J.K. Rowling",
-    description:
-      "The Boy Who Lived, a young wizard discovering his magical heritage.",
-    avatar: "⚡",
-  },
-  {
-    id: "atticus-finch",
-    name: "Atticus Finch",
-    bookTitle: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    description: "A moral lawyer fighting for justice in the American South.",
-    avatar: "⚖️",
-  },
-  {
-    id: "jay-gatsby",
-    name: "Jay Gatsby",
-    bookTitle: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    description: "A mysterious millionaire chasing the American Dream.",
-    avatar: "🎩",
+    id: "adubhai",
+    name: "আদুভাই",
+    bookTitle: "আদুভাই (ছোটগল্প)",
+    author: "আবুল মনসুর আহমদ",
+    description: "শ্রেণীহীনতার ঊর্ধ্বে জ্ঞানান্বেষী, দৃঢ়চেতা এবং আদর্শবাদী এক চিরসবুজ ছাত্র।",
+    avatar: "👨‍🎓",
   },
   {
     id: "mojid",
     name: "মজিদ",
     bookTitle: "লালসালু",
     author: "সৈয়দ ওয়ালীউল্লাহ",
-    description:
-      "একজন ধূর্ত ধর্মীয় নেতা যিনি গ্রামবাসীদের উপর নিয়ন্ত্রণ প্রতিষ্ঠা করেন।",
+    description: "গ্রামবাসীদের ধর্মীয় বিশ্বাসকে ব্যবহার করে নিয়ন্ত্রণ প্রতিষ্ঠা করা একজন ধূর্ত পীর।",
     avatar: "🕌",
+  },
+  {
+    id: "harry-potter",
+    name: "Harry Potter",
+    bookTitle: "Harry Potter and the Philosopher's Stone",
+    author: "J.K. Rowling",
+    description: "The Boy Who Lived, a young wizard discovering his magical heritage and fighting dark forces.",
+    avatar: "⚡",
+  },
+  {
+    id: "anupam",
+    name: "অনুপম",
+    bookTitle: "অপরিচিতা",
+    author: "রবীন্দ্রনাথ ঠাকুর",
+    description: "শুরুতে মামা-নির্ভর, কিন্তু পরে আত্মমর্যাদা ও প্রজ্ঞার প্রতি মুগ্ধ এক সংবেদনশীল যুবক।",
+    avatar: "📖",
+  },
+  {
+    id: "paradoxical-sazid",
+    name: "প্যারাডক্সিক্যাল সাজিদ",
+    bookTitle: "প্যারাডক্সিক্যাল সাজিদ",
+    author: "আরিফ আজাদ",
+    description: "ইসলামের বিরুদ্ধে উত্থাপিত প্রশ্নগুলোর যৌক্তিক ও দার্শনিক উত্তর প্রদানকারী একজন তীক্ষ্ণবুদ্ধিসম্পন্ন গবেষক।",
+    avatar: "🧠",
   },
 ];
 
@@ -100,7 +71,6 @@ export default function CharacterChatPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Add a ref to prevent duplicate initialization calls
   const initializingRef = useRef(false);
 
   useEffect(() => {
@@ -113,14 +83,12 @@ export default function CharacterChatPage() {
 
     setCharacter(foundCharacter);
 
-    // Only initialize if not already initializing and no chatId exists
     if (!initializingRef.current && !chatId) {
       initializeChat(foundCharacter);
     }
-  }, [characterId, chatId]); // Added chatId back to dependencies
+  }, [characterId, chatId]);
 
   const initializeChat = async (char: Character) => {
-    // Prevent duplicate calls
     if (initializingRef.current) {
       console.log("Chat initialization already in progress, skipping...");
       return;
@@ -137,16 +105,10 @@ export default function CharacterChatPage() {
     }
 
     try {
-      // Get Firebase ID token
       const token = await auth.currentUser.getIdToken();
 
-      console.log(
-        "Initializing chat for character:",
-        char.name,
-        char.bookTitle
-      );
+      console.log("Initializing chat for character:", char.name, char.bookTitle);
 
-      // Try to create/get existing chat with this character
       const response = await fetch("http://localhost:5001/api/chats", {
         method: "POST",
         headers: {
@@ -177,10 +139,7 @@ export default function CharacterChatPage() {
       if (result.success) {
         setChatId(result.data.chat._id);
         console.log("Chat ID set to:", result.data.chat._id);
-        console.log(
-          "Existing messages count:",
-          result.data.chat.messages?.length || 0
-        );
+        console.log("Existing messages count:", result.data.chat.messages?.length || 0);
       } else {
         throw new Error(result.message || "Failed to initialize chat");
       }
@@ -189,16 +148,39 @@ export default function CharacterChatPage() {
       setError("Failed to initialize chat. Please try again.");
     } finally {
       setIsLoading(false);
-      initializingRef.current = false; // Reset the ref when done
+      initializingRef.current = false;
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Initializing chat...</p>
+      <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex flex-col">
+        {/* Chat-like loading header */}
+        <div className="bg-white border-b border-blue-100 p-4 shadow-sm">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-full animate-pulse"></div>
+            <div className="flex-1">
+              <div className="h-4 bg-blue-100 rounded animate-pulse mb-1 w-32"></div>
+              <div className="h-3 bg-blue-50 rounded animate-pulse w-48"></div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Loading content */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="relative mb-6">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+              </div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-3xl blur-lg animate-pulse"></div>
+            </div>
+            
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+              Connecting to AI Character
+            </h2>
+            <p className="text-blue-600">Setting up your literary conversation...</p>
+          </div>
         </div>
       </div>
     );
@@ -206,16 +188,26 @@ export default function CharacterChatPage() {
 
   if (error || !character) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+      <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          
+          <h1 className="text-xl font-semibold text-gray-900 mb-4">
             {error || "Character not found"}
           </h1>
+          
           <button
             onClick={() => window.history.back()}
-            className="text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            ← Go back
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Go Back
           </button>
         </div>
       </div>
@@ -224,16 +216,26 @@ export default function CharacterChatPage() {
 
   if (!chatId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+      <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          
+          <h1 className="text-xl font-semibold text-gray-900 mb-4">
             Failed to load chat
           </h1>
+          
           <button
             onClick={() => window.location.reload()}
-            className="text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Try again
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Try Again
           </button>
         </div>
       </div>
@@ -241,32 +243,78 @@ export default function CharacterChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Character Header */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex items-center space-x-4">
-            <div className="text-5xl">{character.avatar}</div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {character.name}
-              </h1>
-              <p className="text-gray-600">
-                From &ldquo;{character.bookTitle}&rdquo; by {character.author}
-              </p>
-              <p className="text-sm text-gray-500 mt-1">
-                {character.description}
-              </p>
+    <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex flex-col">
+      {/* Chat Header - Like modern messaging apps */}
+      <div className="bg-white/90 backdrop-blur-sm border-b border-blue-100 p-4 shadow-sm sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto flex items-center space-x-4">
+          {/* Back button */}
+          <button
+            onClick={() => window.history.back()}
+            className="p-2 hover:bg-blue-50 rounded-xl transition-colors duration-200 group"
+          >
+            <svg className="w-5 h-5 text-blue-600 group-hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+
+          {/* Character avatar with online indicator */}
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center text-2xl shadow-sm">
+              {character.avatar}
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
+          </div>
+
+          {/* Character info */}
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-semibold text-gray-900 truncate">
+              {character.name}
+            </h1>
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span>Online • AI Character</span>
             </div>
           </div>
-        </div>
 
-        {/* Chat Window */}
-        <CharacterChatWindow
-          chatId={chatId}
-          character={character}
-          systemPrompt={getCharacterPrompt(character.name, character.bookTitle)}
-        />
+          {/* Character info capsule */}
+          <div className="hidden lg:flex items-center bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-2 rounded-full border border-blue-200">
+            <svg className="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span className="text-blue-700 text-sm font-medium max-w-xs truncate">
+              {character.bookTitle}
+            </span>
+          </div>
+
+          {/* Chat options */}
+          <div className="flex items-center space-x-2">
+            {/* AI badge */}
+            <div className="hidden sm:flex items-center px-3 py-1 bg-blue-100 rounded-full">
+              <svg className="w-3 h-3 text-blue-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span className="text-blue-700 text-xs font-medium">Gemini AI</span>
+            </div>
+
+            {/* Info button */}
+            <button className="p-2 hover:bg-blue-50 rounded-xl transition-colors duration-200 group">
+              <svg className="w-5 h-5 text-blue-600 group-hover:text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Chat Window - Main content area with fixed layout */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col">
+          <CharacterChatWindow
+            chatId={chatId}
+            character={character}
+            systemPrompt={getCharacterPrompt(character.name, character.bookTitle)}
+          />
+        </div>
       </div>
     </div>
   );

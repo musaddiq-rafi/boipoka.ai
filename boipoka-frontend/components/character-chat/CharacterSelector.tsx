@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { getAuth } from "firebase/auth";
 import { initFirebase } from "@/lib/googleAuth";
 
-// Initialize Firebase
+// Initialize Firebase (assuming this handles initialization idempotently)
 initFirebase();
 
 interface Character {
@@ -20,70 +20,13 @@ interface Character {
 
 const characters: Character[] = [
   {
-    id: "sherlock-holmes",
-    name: "Sherlock Holmes",
-    bookTitle: "The Adventures of Sherlock Holmes",
-    author: "Arthur Conan Doyle",
-    description:
-      "The world's greatest consulting detective with exceptional deductive abilities.",
-    avatar: "🕵️‍♂️",
-    personality: ["Analytical", "Observant", "Logical", "Eccentric"],
-  },
-  {
-    id: "elizabeth-bennet",
-    name: "Elizabeth Bennet",
-    bookTitle: "Pride and Prejudice",
-    author: "Jane Austen",
-    description: "A witty and independent young woman with strong opinions.",
-    avatar: "👩‍🎭",
-    personality: ["Witty", "Independent", "Spirited", "Intelligent"],
-  },
-  {
-    id: "gandalf",
-    name: "Gandalf",
-    bookTitle: "The Lord of the Rings",
-    author: "J.R.R. Tolkien",
-    description:
-      "A wise wizard and guide with ancient knowledge and magical powers.",
-    avatar: "🧙‍♂️",
-    personality: ["Wise", "Patient", "Mysterious", "Protective"],
-  },
-  {
-    id: "hermione-granger",
-    name: "Hermione Granger",
-    bookTitle: "Harry Potter and the Philosopher's Stone",
-    author: "J.K. Rowling",
-    description: "A brilliant witch known for her intelligence and loyalty.",
-    avatar: "📚",
-    personality: ["Brilliant", "Loyal", "Studious", "Brave"],
-  },
-  {
-    id: "harry-potter",
-    name: "Harry Potter",
-    bookTitle: "Harry Potter and the Philosopher's Stone",
-    author: "J.K. Rowling",
-    description:
-      "The Boy Who Lived, a young wizard discovering his magical heritage.",
-    avatar: "⚡",
-    personality: ["Brave", "Loyal", "Modest", "Determined"],
-  },
-  {
-    id: "atticus-finch",
-    name: "Atticus Finch",
-    bookTitle: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    description: "A moral lawyer fighting for justice in the American South.",
-    avatar: "⚖️",
-    personality: ["Just", "Wise", "Compassionate", "Principled"],
-  },
-  {
-    id: "jay-gatsby",
-    name: "Jay Gatsby",
-    bookTitle: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    description: "A mysterious millionaire chasing the American Dream.",
-    avatar: "🎩",
-    personality: ["Romantic", "Ambitious", "Mysterious", "Idealistic"],
+    id: "adubhai",
+    name: "আদুভাই",
+    bookTitle: "আদুভাই (ছোটগল্প)",
+    author: "আবুল মনসুর আহমদ",
+    description: "শ্রেণীহীনতার ঊর্ধ্বে জ্ঞানান্বেষী, দৃঢ়চেতা এবং আদর্শবাদী এক চিরসবুজ ছাত্র।",
+    avatar: "👨‍🎓",
+    personality: ["Principled", "Resilient", "Optimistic", "Diligent"],
   },
   {
     id: "mojid",
@@ -91,11 +34,42 @@ const characters: Character[] = [
     bookTitle: "লালসালু",
     author: "সৈয়দ ওয়ালীউল্লাহ",
     description:
-      "একজন ধূর্ত ধর্মীয় নেতা যিনি গ্রামবাসীদের উপর নিয়ন্ত্রণ প্রতিষ্ঠা করেন।",
+      "গ্রামবাসীদের ধর্মীয় বিশ্বাসকে ব্যবহার করে নিয়ন্ত্রণ প্রতিষ্ঠা করা একজন ধূর্ত পীর।",
     avatar: "🕌",
     personality: ["Cunning", "Manipulative", "Religious", "Authoritative"],
   },
+  {
+    id: "harry-potter",
+    name: "Harry Potter",
+    bookTitle: "Harry Potter and the Philosopher's Stone",
+    author: "J.K. Rowling",
+    description:
+      "The Boy Who Lived, a young wizard discovering his magical heritage and fighting dark forces.",
+    avatar: "⚡",
+    personality: ["Brave", "Loyal", "Modest", "Determined"],
+  },
+  {
+    id: "anupam",
+    name: "অনুপম",
+    bookTitle: "অপরিচিতা",
+    author: "রবীন্দ্রনাথ ঠাকুর",
+    description:
+      "শুরুতে মামা-নির্ভর, কিন্তু পরে আত্মমর্যাদা ও প্রজ্ঞার প্রতি মুগ্ধ এক সংবেদনশীল যুবক।",
+    avatar: "📖",
+    personality: ["Sensitive", "Contemplative", "Evolving", "Idealistic"],
+  },
+  {
+    id: "paradoxical-sazid",
+    name: "প্যারাডক্সিক্যাল সাজিদ",
+    bookTitle: "প্যারাডক্সিক্যাল সাজিদ",
+    author: "আরিফ আজাদ",
+    description:
+      "ইসলামের বিরুদ্ধে উত্থাপিত প্রশ্নগুলোর যৌক্তিক ও দার্শনিক উত্তর প্রদানকারী একজন তীক্ষ্ণবুদ্ধিসম্পন্ন গবেষক।",
+    avatar: "🧠",
+    personality: ["Logical", "Rational", "Apologetic", "Inquisitive"],
+  },
 ];
+
 export default function CharacterSelector() {
   const [isLoading, setIsLoading] = useState<string | null>(null);
   const router = useRouter();
@@ -103,7 +77,7 @@ export default function CharacterSelector() {
   const handleCharacterSelect = async (character: Character) => {
     const auth = getAuth();
     if (!auth.currentUser) {
-      alert("Please log in first");
+      alert("Please log in first.");
       return;
     }
 
