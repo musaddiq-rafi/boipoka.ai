@@ -1,35 +1,22 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getAuth } from "firebase/auth";
-import { initFirebase } from "@/lib/googleAuth";
-
-// Initialize Firebase
-initFirebase();
 
 interface Message {
-  _id: string;
+  id: string;
   role: "user" | "assistant";
   content: string;
-  timestamp: string;
-}
-
-interface GuessGame {
-  _id: string;
-  messages: Message[];
-  metadata: {
-    questionCount: number;
-    gameState: "questioning" | "guessing" | "completed";
-    gameResult?: string;
-  };
+  timestamp: Date;
 }
 
 export default function CharacterGuessGame() {
-  const [game, setGame] = useState<GuessGame | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [questionCount, setQuestionCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -38,53 +25,21 @@ export default function CharacterGuessGame() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [game?.messages]);
+  }, [messages]);
+
+  const generateId = () => {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  };
 
   const startNewGame = async () => {
     setIsStarting(true);
     setError(null);
+    setMessages([]);
+    setQuestionCount(0);
 
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (!user) {
-        throw new Error("Authentication required");
-      }
-
-      const token = await user.getIdToken();
-
-      // Create chat using the same endpoint as character chat
-      const response = await fetch(`http://localhost:5001/api/chats`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          data: {
-            character: {
-              name: "Character Guesser",
-              bookTitle: "Guessing Game",
-              description: "AI that tries to guess the book character you're thinking of",
-              avatar: "🔮",
-            },
-            context: "character_guessing_game",
-            model: "gemini-pro"
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to start new game");
-      }
-
-      const data = await response.json();
-      const chat = data.data.chat;
-
-      // Now call Gemini API directly (like character chat does)
-      await generateInitialQuestion(chat._id, token);
-
+      await generateInitialQuestion();
+      setGameStarted(true);
     } catch (err) {
       console.error("Error starting game:", err);
       setError(err instanceof Error ? err.message : "Failed to start game");
@@ -93,7 +48,7 @@ export default function CharacterGuessGame() {
     }
   };
 
-  const generateInitialQuestion = async (chatId: string, token: string) => {
+  const generateInitialQuestion = async () => {
     try {
       const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
       if (!apiKey) {
@@ -104,87 +59,56 @@ export default function CharacterGuessGame() {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-      const systemPrompt = `You are playing a character guessing game like Akinator, but specifically for book characters. Your goal is to guess the literary character the user has in mind by asking strategic questions that can only be answered with "YES", "NO", or "NOT SURE".
+      const systemPrompt = `You are playing a character guessing game. Your goal is to guess the literary character the user has in mind by asking strategic elimination questions.
 
-Rules:
-1. Ask short, focused questions that help narrow down the possibilities
-2. Start with broad categories (genre, time period, gender, etc.) and get more specific
-3. Questions should be answerable with only YES, NO, or NOT SURE
-4. When you're confident (after gathering enough information), make your guess in the format: "GUESS: [Character Name] from [Book Title] by [Author]"
-5. Keep track of all previous answers to avoid contradictions
+RULES:
+1. Ask ONE short, simple question that can ONLY be answered with YES, NO, or NOT SURE
+2. Each question should eliminate roughly half of all possible book characters
+3. Start with broad categories: gender, time period, genre, age group, etc.
+4. Keep questions under 10 words
+5. When confident after 8-12 questions, make your guess as: "GUESS: [Character Name] from [Book Title]"
 
-Start by asking your first question to begin narrowing down the character.`;
+Ask your first elimination question now:`;
 
       const result = await model.generateContent(systemPrompt);
       const aiResponse = result.response.text();
 
-      // Add AI's first question to the chat (same as character chat)
-      const messageResponse = await fetch(`http://localhost:5001/api/chats/${chatId}/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          data: {
-            role: "assistant",
-            content: aiResponse,
-          },
-        }),
-      });
+      const aiMessage: Message = {
+        id: generateId(),
+        role: "assistant",
+        content: aiResponse,
+        timestamp: new Date(),
+      };
 
-      if (!messageResponse.ok) {
-        throw new Error("Failed to save AI message");
-      }
-
-      const updatedChat = await messageResponse.json();
-      setGame(updatedChat.data.chat);
+      setMessages([aiMessage]);
+      setQuestionCount(1);
 
     } catch (error) {
       console.error("Error generating initial question:", error);
-      setError("Failed to generate initial question");
+      throw new Error("Failed to generate initial question");
     }
   };
 
   const respondToQuestion = async (response: "YES" | "NO" | "NOT SURE") => {
-    if (!game) return;
+    if (!gameStarted) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
+      // Add user's response
+      const userMessage: Message = {
+        id: generateId(),
+        role: "user",
+        content: response,
+        timestamp: new Date(),
+      };
 
-      if (!user) {
-        throw new Error("Authentication required");
-      }
+      const updatedMessages = [...messages, userMessage];
+      setMessages(updatedMessages);
 
-      const token = await user.getIdToken();
-
-      // First, add user's response to chat (same as character chat)
-      const userMessageResponse = await fetch(`http://localhost:5001/api/chats/${game._id}/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          data: {
-            role: "user",
-            content: response,
-          },
-        }),
-      });
-
-      if (!userMessageResponse.ok) {
-        throw new Error("Failed to save user response");
-      }
-
-      const userMessageData = await userMessageResponse.json();
-
-      // Then call Gemini API for AI response
-      await generateAIResponse(game._id, token, userMessageData.data.chat.messages);
+      // Generate AI response
+      await generateAIResponse(updatedMessages);
 
     } catch (err) {
       console.error("Error sending response:", err);
@@ -194,7 +118,7 @@ Start by asking your first question to begin narrowing down the character.`;
     }
   };
 
-  const generateAIResponse = async (chatId: string, token: string, messages: Message[]) => {
+  const generateAIResponse = async (currentMessages: Message[]) => {
     try {
       const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
       if (!apiKey) {
@@ -205,49 +129,41 @@ Start by asking your first question to begin narrowing down the character.`;
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-      const systemContext = `You are playing a character guessing game like Akinator, but specifically for book characters. Your goal is to guess the literary character the user has in mind by asking strategic questions that can only be answered with "YES", "NO", or "NOT SURE".
+      // Extract previous Q&A pairs for context
+      const conversation = currentMessages.map(msg => `${msg.role}: ${msg.content}`).join('\n');
 
-Rules:
-1. Ask short, focused questions that help narrow down the possibilities
-2. Start with broad categories (genre, time period, gender, etc.) and get more specific
-3. Questions should be answerable with only YES, NO, or NOT SURE
-4. When you're confident (after gathering enough information), make your guess in the format: "GUESS: [Character Name] from [Book Title] by [Author]"
-5. Keep track of all previous answers to avoid contradictions
-6. If the user says your guess is wrong, continue questioning with new strategies
+      const systemContext = `You are playing a character elimination game. Your goal is to guess the literary character using strategic elimination questions.
 
-Previous conversation:
-${messages.map(msg => `${msg.role}: ${msg.content}`).join('\n')}
+RULES:
+1. Ask ONE short elimination question (under 10 words)
+2. Each question should eliminate roughly half of remaining possibilities
+3. NEVER repeat information the user already provided
+4. NEVER ask questions that contradict previous answers
+5. Progress from broad to specific: genre → time period → characteristics → specific traits
+6. After 8-12 strategic questions, make your guess as: "GUESS: [Character Name] from [Book Title]"
 
-Continue the guessing game. If you haven't made a guess yet and feel you have enough information, make your guess. If you already made a guess and the user said NO, ask a different type of question to find the character.`;
+Previous Q&A:
+${conversation}
+
+Based on the answers above, ask your next elimination question (or make your guess if ready):`;
 
       const result = await model.generateContent(systemContext);
       const aiResponse = result.response.text();
 
-      // Add AI's response to the chat
-      const aiMessageResponse = await fetch(`http://localhost:5001/api/chats/${chatId}/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          data: {
-            role: "assistant",
-            content: aiResponse,
-          },
-        }),
-      });
+      const aiMessage: Message = {
+        id: generateId(),
+        role: "assistant",
+        content: aiResponse,
+        timestamp: new Date(),
+      };
 
-      if (!aiMessageResponse.ok) {
-        throw new Error("Failed to save AI response");
-      }
-
-      const updatedChat = await aiMessageResponse.json();
-      setGame(updatedChat.data.chat);
+      setMessages([...currentMessages, aiMessage]);
 
       // Check if AI made a guess
       if (aiResponse.includes("GUESS:")) {
         setShowConfirmation(true);
+      } else {
+        setQuestionCount(prev => prev + 1);
       }
 
     } catch (error) {
@@ -257,51 +173,30 @@ Continue the guessing game. If you haven't made a guess yet and feel you have en
   };
 
   const confirmGuess = async (isCorrect: boolean) => {
-    if (!game) return;
-
     setIsLoading(true);
     setError(null);
     setShowConfirmation(false);
 
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (!user) {
-        throw new Error("Authentication required");
-      }
-
-      const token = await user.getIdToken();
-
       let finalMessage: string;
       if (isCorrect) {
-        const questionCount = game.messages.filter(msg => msg.role === "assistant" && !msg.content.includes("GUESS:")).length;
         finalMessage = `🎉 Excellent! I guessed your character correctly in ${questionCount} questions! Thanks for playing!`;
       } else {
         finalMessage = "That's not correct! Let me ask more questions to find the right character.";
       }
 
-      // Add final message to chat
-      const messageResponse = await fetch(`http://localhost:5001/api/chats/${game._id}/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          data: {
-            role: "assistant",
-            content: finalMessage,
-          },
-        }),
-      });
+      const finalAiMessage: Message = {
+        id: generateId(),
+        role: "assistant",
+        content: finalMessage,
+        timestamp: new Date(),
+      };
 
-      if (!messageResponse.ok) {
-        throw new Error("Failed to save final message");
+      setMessages(prev => [...prev, finalAiMessage]);
+
+      if (!isCorrect) {
+        setQuestionCount(prev => prev + 1);
       }
-
-      const updatedChat = await messageResponse.json();
-      setGame(updatedChat.data.chat);
 
     } catch (err) {
       console.error("Error confirming guess:", err);
@@ -311,11 +206,19 @@ Continue the guessing game. If you haven't made a guess yet and feel you have en
     }
   };
 
-  const isGameCompleted = game?.metadata.gameState === "completed";
-  const lastMessage = game?.messages[game.messages.length - 1];
-  const isAIGuess = lastMessage?.content.includes("GUESS:");
+  const resetGame = () => {
+    setMessages([]);
+    setGameStarted(false);
+    setQuestionCount(0);
+    setShowConfirmation(false);
+    setError(null);
+  };
 
-  if (!game) {
+  const lastMessage = messages[messages.length - 1];
+  const isAIGuess = lastMessage?.content.includes("GUESS:");
+  const isGameCompleted = lastMessage?.content.includes("🎉");
+
+  if (!gameStarted) {
     return (
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
         <div className="text-center">
@@ -345,17 +248,25 @@ Continue the guessing game. If you haven't made a guess yet and feel you have en
       <div className="bg-purple-600 text-white p-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Character Guesser 🔮</h2>
-          <div className="text-sm">
-            Questions: {game.metadata.questionCount || 0}
+          <div className="flex items-center space-x-4">
+            <div className="text-sm">
+              Questions: {questionCount}
+            </div>
+            <button
+              onClick={resetGame}
+              className="text-sm bg-purple-700 hover:bg-purple-800 px-3 py-1 rounded"
+            >
+              New Game
+            </button>
           </div>
         </div>
       </div>
 
       {/* Messages Area */}
       <div className="h-96 overflow-y-auto p-4 space-y-4">
-        {game.messages.map((message, index) => (
+        {messages.map((message) => (
           <div
-            key={message._id || index}
+            key={message.id}
             className={`flex ${
               message.role === "user" ? "justify-end" : "justify-start"
             }`}
@@ -436,7 +347,7 @@ Continue the guessing game. If you haven't made a guess yet and feel you have en
             <button
               onClick={() => confirmGuess(false)}
               disabled={isLoading}
-              className="bg-red-500 hover:bg-red-600 disabled:bg-red-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              className="bg-red-500 hover:bg-red-600 disabled:bg-red-400 text-white font-semibold py-2 px-4 rounded-colors"
             >
               No, Wrong
             </button>
@@ -449,14 +360,13 @@ Continue the guessing game. If you haven't made a guess yet and feel you have en
         <div className="p-4 border-t bg-green-50">
           <div className="text-center">
             <p className="text-green-700 font-semibold mb-4">
-              🎉 Game Complete!
+              Game Complete!
             </p>
             <button
-              onClick={startNewGame}
-              disabled={isStarting}
-              className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              onClick={resetGame}
+              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
             >
-              {isStarting ? "Starting..." : "Play Again"}
+              Play Again
             </button>
           </div>
         </div>
