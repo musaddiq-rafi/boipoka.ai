@@ -20,11 +20,21 @@ export default function CharacterGuessGame() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest"
+    });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only scroll if there are messages and we're not in the middle of loading
+    if (messages.length > 0) {
+      // Use a small delay to ensure the DOM has updated
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    }
   }, [messages]);
 
   const generateId = () => {
