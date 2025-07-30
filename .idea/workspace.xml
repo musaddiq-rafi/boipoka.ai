@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e30833c5-4600-49ca-bd4c-a7db1c45188e" name="Changes" comment="improve scrolling behavior in CharacterGuessGame component">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boipoka-frontend/.eslintrc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boipoka-frontend/app/offline/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boipoka-frontend/components/PWAInstaller.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boipoka-frontend/public/icon-192x192.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boipoka-frontend/public/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boipoka-frontend/public/sw.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boipoka-frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/boipoka-frontend/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boipoka-frontend/components/home/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/boipoka-frontend/components/home/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boipoka-frontend/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/boipoka-frontend/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boipoka-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/boipoka-frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boipoka-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/boipoka-frontend/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Dr-Lepic&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/musaddiq-rafi/boipoka.ai.git&quot;,
+    &quot;accountId&quot;: &quot;aea0c2bb-b96e-4d13-a549-33240f18c651&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="30SnBsVF70DIUno29HlQzgVgzme" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev-mahbub&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/mahbub/Documents/Code/Web Project/boipoka.ai/boipoka-frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e30833c5-4600-49ca-bd4c-a7db1c45188e" name="Changes" comment="" />
+      <created>1753629709187</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753629709187</updated>
+      <workItem from="1753629711449" duration="544000" />
+      <workItem from="1753630287111" duration="4127000" />
+      <workItem from="1753708326970" duration="3203000" />
+      <workItem from="1753764629762" duration="3092000" />
+      <workItem from="1753768560386" duration="558000" />
+    </task>
+    <task id="LOCAL-00001" summary="added AI Character Guess game from books">
+      <option name="closed" value="true" />
+      <created>1753633927916</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1753633927916</updated>
+    </task>
+    <task id="LOCAL-00002" summary="updated ai character guess chat for concise questions">
+      <option name="closed" value="true" />
+      <created>1753710813178</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1753710813178</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updated AI character guess chat for concise questions">
+      <option name="closed" value="true" />
+      <created>1753711401152</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1753711401152</updated>
+    </task>
+    <task id="LOCAL-00004" summary="improve scrolling behavior in CharacterGuessGame component">
+      <option name="closed" value="true" />
+      <created>1753711668073</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1753711668073</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added AI Character Guess game from books" />
+    <MESSAGE value="updated ai character guess chat for concise questions" />
+    <MESSAGE value="updated AI character guess chat for concise questions" />
+    <MESSAGE value="improve scrolling behavior in CharacterGuessGame component" />
+    <option name="LAST_COMMIT_MESSAGE" value="improve scrolling behavior in CharacterGuessGame component" />
+  </component>
+</project>
