@@ -114,10 +114,9 @@ An AI-powered platform where users can:
 | **Google Books API** | Book data and metadata |
 
 ### **DevOps & Deployment**
-- **Vercel** - Frontend deployment and hosting
+- **Vercel** - Deployment and hosting
 - **MongoDB Atlas** - Cloud database hosting
 - **Firebase** - Authentication and cloud services
-- **GitHub Actions** - CI/CD pipeline
 
 ---
 
@@ -140,15 +139,21 @@ cd boipoka.ai
 ```bash
 cd boipoka-backend
 npm install
-
-# Create environment file
-cp .env.example .env
 ```
 
 #### Backend Environment Variables (.env)
 ```env
-# Database
+FRONTEND_URL=
+WEB_API_KEY=
+ID_TOKEN=
+MONGODB_URL=
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
 
+# for testing APIs
+TEST_USER_EMAIL=
+TEST_USER_PASS=
 ```
 
 ### 3. Frontend Setup
@@ -263,16 +268,6 @@ PATCH  /api/readinglist/:id   # Update reading progress
 DELETE /api/readinglist/:id   # Remove from reading list
 ```
 
-#### **✍️ Blog & Community Features**
-```http
-GET    /api/blogs             # Get all blog posts (paginated)
-POST   /api/blogs             # Create new blog post
-GET    /api/blogs/:id         # Get specific blog post
-PATCH  /api/blogs/:id         # Update blog post
-DELETE /api/blogs/:id         # Delete blog post
-POST   /api/blogs/:id/comments # Add comment to blog
-```
-
 ### 📋 **API Response Format**
 All API responses follow this consistent structure:
 ```json
@@ -295,7 +290,6 @@ All API responses follow this consistent structure:
 - **Firebase JWT Tokens**: Secure authentication with Google Integration
 - **Protected Routes**: All user-specific endpoints require authentication
 - **Data Validation**: Comprehensive input validation and sanitization
-- **Rate Limiting**: API rate limiting to prevent abuse
 - **CORS Configuration**: Proper cross-origin resource sharing setup
 
 ### 🧪 **Testing & Development**
