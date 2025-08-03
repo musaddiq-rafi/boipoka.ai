@@ -19,6 +19,7 @@ app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
+      "https://boipokaai.vercel.app/",
       "http://localhost:3000",
       "http://localhost:8000",
     ],
