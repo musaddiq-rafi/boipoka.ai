@@ -1,4 +1,4 @@
-# BoiBritto API
+# Boipoka.ai API
 
 ## Admin Panel Setup
 
