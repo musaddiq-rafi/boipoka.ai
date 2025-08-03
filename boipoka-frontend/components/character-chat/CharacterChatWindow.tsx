@@ -311,6 +311,8 @@ Please respond as ${character.name} from "${
     }
   };
 
+ // ...existing code...
+
   const generateCharacterResponse = (characterName: string): string => {
     const responses: Record<string, string[]> = {
       "আদুভাই": [
@@ -334,6 +336,13 @@ Please respond as ${character.name} from "${
         "আপনার প্রশ্নটি খুবই তাৎপর্যপূর্ণ। আসুন, আমরা যুক্তির নিরিখে এর গভীরে প্রবেশ করি।",
         "বিশ্বাস আর বিজ্ঞান একে অপরের পরিপূরক হতে পারে।"
       ],
+      "Sherlock Holmes": [
+        "Elementary, my dear fellow! The solution is quite obvious when you consider all the facts.",
+        "You see, but you do not observe. The details are all there if you know where to look.",
+        "The game is afoot! This problem presents some most interesting features.",
+        "When you have eliminated the impossible, whatever remains, however improbable, must be the truth.",
+        "I never guess. It is a shocking habit—destructive to the logical faculty."
+      ],
     };
 
     const characterResponses = responses[characterName as keyof typeof responses];
@@ -344,6 +353,7 @@ Please respond as ${character.name} from "${
     return characterResponses[Math.floor(Math.random() * characterResponses.length)];
   };
 
+// ...existing code...
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();

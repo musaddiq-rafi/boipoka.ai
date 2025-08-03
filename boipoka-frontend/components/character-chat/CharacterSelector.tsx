@@ -68,6 +68,16 @@ const characters: Character[] = [
     avatar: "🧠",
     personality: ["Logical", "Rational", "Apologetic", "Inquisitive"],
   },
+  {
+    id: "sherlock-holmes",
+    name: "Sherlock Holmes",
+    bookTitle: "The Adventures of Sherlock Holmes",
+    author: "Arthur Conan Doyle",
+    description:
+      "The world's greatest consulting detective, master of deduction and logical reasoning, solving mysteries through observation and scientific method.",
+    avatar: "🕵️",
+    personality: ["Analytical", "Observant", "Logical", "Brilliant"],
+  },
 ];
 
 export default function CharacterSelector() {

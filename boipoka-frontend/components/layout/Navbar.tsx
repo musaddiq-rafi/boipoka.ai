@@ -109,10 +109,10 @@ export default function Navbar() {
                 Collections
               </Link>
               <Link
-                href="/discussions"
-                className={getLinkStyles('/discussions')}
+                href="/imagene"
+                className={getLinkStyles('/imagene')}
               >
-                Discussions
+                Imagene
               </Link>
             </>
           )}

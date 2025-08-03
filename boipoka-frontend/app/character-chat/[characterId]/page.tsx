@@ -60,6 +60,14 @@ const characters: Character[] = [
     description: "ইসলামের বিরুদ্ধে উত্থাপিত প্রশ্নগুলোর যৌক্তিক ও দার্শনিক উত্তর প্রদানকারী একজন তীক্ষ্ণবুদ্ধিসম্পন্ন গবেষক।",
     avatar: "🧠",
   },
+  {
+    id: "sherlock-holmes",
+    name: "Sherlock Holmes",
+    bookTitle: "The Adventures of Sherlock Holmes",
+    author: "Arthur Conan Doyle",
+    description: "The world's greatest consulting detective, master of deductive reasoning and observation.",
+    avatar: "🕵️",
+  },
 ];
 
 export default function CharacterChatPage() {

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { usePollinationsImage } from '@pollinations/react';
 
-// Ultra-enhanced character data with highly detailed visual prompts
+// Simplified character data - realistic only
 const bookCharacters = [
   {
     id: "none",
@@ -23,7 +23,7 @@ const bookCharacters = [
     description: "শ্রেণীহীনতার ঊর্ধ্বে জ্ঞানান্বেষী, দৃঢ়চেতা এবং আদর্শবাদী এক চিরসবুজ ছাত্র।",
     avatar: "👨‍🎓",
     personality: ["Principled", "Resilient", "Optimistic", "Diligent"],
-    visualPrompt: "Medium shot portrait of Aaduvai, a principled Bengali student from 1940s rural Bangladesh positioned in left third of frame. Face: oval-shaped with gentle features, warm brown eyes filled with determination and wisdom, thick black eyebrows, straight nose, soft smile lines. Hair: thick black hair, slightly wavy, parted to the side, well-groomed. Skin: medium brown complexion with subtle sun-touched glow. Body: lean build, confident posture. Clothing: crisp white cotton kurta with subtle embroidery, traditional white dhoti, simple brown leather sandals, worn leather satchel with books. Expression: serene confidence, thoughtful eyes. Background and atmosphere: expansive rustic village school courtyard with prominent Bangladesh flag 🇧🇩 flying on flagpole, mango trees, clay pots, traditional thatched huts, village children studying, golden hour lighting creating warm shadows, peaceful academic environment with birds chirping, dust motes in sunbeams, nostalgic sepia-toned warmth. Character occupies only 30% of frame, leaving 70% for rich environmental storytelling and cultural context."
+    visualPrompt: "Professional portrait of Aaduvai, a principled Bengali student from 1940s rural Bangladesh. Face: oval-shaped with gentle features, warm brown eyes filled with determination and wisdom, thick black eyebrows, straight nose, soft smile lines showing optimism. Hair: thick black hair, slightly wavy, parted to the side, well-groomed despite modest means. Skin: medium brown complexion, smooth with subtle sun-touched glow from outdoor village life. Body: lean build, average height, confident posture with shoulders back. Clothing: crisp white cotton kurta with subtle embroidery, traditional white dhoti perfectly draped, simple brown leather sandals. Expression: serene confidence, eyes reflecting deep thoughtfulness and unwavering principles, gentle smile suggesting inner peace and dedication to learning."
   },
   {
     id: "mojid",
@@ -33,7 +33,7 @@ const bookCharacters = [
     description: "গ্রামবাসীদের ধর্মীয় বিশ্বাসকে ব্যবহার করে নিয়ন্ত্রণ প্রতিষ্ঠা করা একজন ধূর্ত পীর।",
     avatar: "🕌",
     personality: ["Cunning", "Manipulative", "Religious", "Authoritative"],
-    visualPrompt: "Wide cinematic shot of Mojid, a cunning spiritual leader positioned in right third of composition. Face: angular features with sharp cheekbones, piercing dark eyes with calculating gaze, thin lips curved in subtle scheming smile, weathered skin with deep lines. Hair: salt-and-pepper beard reaching mid-chest, black hair with gray streaks under traditional white cap (taqiyah). Body: medium build, commanding presence, authoritative posture. Clothing: distinctive flowing red silk robe (লালসালু) over white cotton kurta, ornate prayer beads (tasbih), traditional leather sandals. Expression: mixture of religious devotion and hidden cunning. Background and setting: expansive ancient weathered shrine (mazar) complex with prominent Bangladesh flag 🇧🇩 visible, crumbling brick walls with faded Arabic calligraphy, multiple oil lamps casting dancing shadows, red cloth draped over tomb, village mosque with minaret in distance, gathered villagers in background showing his influence. Atmospheric elements: mystical yet ominous mood, dramatic chiaroscuro lighting, golden oil lamp glow contrasting deep shadows, dust particles floating in amber light. Character takes only 25% of frame, emphasizing the religious compound and cultural atmosphere."
+    visualPrompt: "Professional portrait of Mojid, a cunning 45-year-old spiritual leader from rural Bengal. Face: angular features with sharp cheekbones, piercing dark eyes with calculating gaze that seems to see through souls, thin lips curved in subtle scheming smile, weathered skin with deep lines from sun exposure and age. Hair: salt-and-pepper beard reaching mid-chest, meticulously groomed, black hair with gray streaks slicked back under traditional white cap (taqiyah). Body: medium build, commanding presence, authoritative posture with hands clasped. Clothing: distinctive flowing red silk robe (লালসালু) over white cotton kurta and loose white pants, ornate prayer beads (tasbih) hanging from neck. Expression: mixture of religious devotion and hidden cunning, slight smirk suggesting secret knowledge and manipulation."
   },
   {
     id: "harry-potter",
@@ -43,7 +43,7 @@ const bookCharacters = [
     description: "The Boy Who Lived, a young wizard discovering his magical heritage and fighting dark forces.",
     avatar: "⚡",
     personality: ["Brave", "Loyal", "Modest", "Determined"],
-    visualPrompt: "Wide-angle portrait of 11-year-old Harry Potter positioned in center-left of frame, showing full figure and extensive magical environment. Face: round youthful face with pale complexion, light freckles across nose, bright emerald green eyes filled with wonder, thick black eyebrows, small straight nose, gentle smile. Hair: jet-black, perpetually messy and unruly, sticking up at odd angles. Scar: distinctive lightning bolt-shaped scar on forehead, thin red line partially hidden by hair, faintly glowing. Body: small for his age, thin but wiry build, quick reflexes. Clothing: authentic Hogwarts uniform with flowing black robes, white collared shirt, Gryffindor striped tie (deep red and gold), gray wool sweater vest. Accessories: round wire-rimmed glasses, holding elegant holly and phoenix feather wand, magical sparkles emanating from wand tip. Expression: mixture of wonder, determination, and slight nervousness. Background and atmosphere: magnificent Grand Hall of Hogwarts with soaring stone arches, floating candles, enchanted ceiling showing starry night sky, multiple house banners including prominent Gryffindor flag with lion emblem, magical portraits moving in frames, long tables with feast, other students in background, warm golden candlelight, floating sparks, ancient wisdom atmosphere. Harry occupies only 20% of composition, showcasing the vast magical world around him."
+    visualPrompt: "Professional portrait of 11-year-old Harry Potter. Face: round youthful face with pale complexion and light freckles across nose, bright emerald green eyes filled with wonder and determination, thick black eyebrows, small straight nose, gentle smile showing modest nature. Hair: jet-black, perpetually messy and unruly, sticking up at odd angles especially at the back, impossible to tame despite efforts. Scar: distinctive lightning bolt-shaped scar on forehead, thin red line partially hidden by falling hair strands. Body: small for his age due to childhood neglect, thin but wiry build, quick reflexes evident in posture. Clothing: authentic Hogwarts uniform with flowing black robes over white collared shirt, Gryffindor striped tie (deep red and gold), gray wool sweater vest. Accessories: round wire-rimmed glasses slightly askew, holding elegant holly and phoenix feather wand. Expression: mixture of wonder, determination, and slight nervousness, eyes wide with discovery of magical world, brave set to jaw despite modest demeanor."
   },
   {
     id: "anupam",
@@ -53,7 +53,7 @@ const bookCharacters = [
     description: "শুরুতে মামা-নির্ভর, কিন্তু পরে আত্মমর্যাদা ও প্রজ্ঞার প্রতি মুগ্ধ এক সংবেদনশীল যুবক।",
     avatar: "📖",
     personality: ["Sensitive", "Contemplative", "Evolving", "Idealistic"],
-    visualPrompt: "Artistic environmental portrait of Anupam positioned in right third of frame, a sensitive 25-year-old Bengali gentleman from early 1900s Calcutta. Face: refined oval features with fair complexion, large expressive dark eyes reflecting deep sensitivity, well-defined eyebrows, straight aristocratic nose, full lips in thoughtful expression, clean-shaven with soft facial structure. Hair: thick black hair, neatly combed and parted, occasionally falling across forehead. Body: elegant slim build, graceful posture reflecting upper-class upbringing, long artistic fingers holding book. Clothing: sophisticated colonial-era Bengali formal wear - crisp white cotton kurta with subtle gold border, perfectly draped dhoti, silk chaddar (shawl) draped over shoulder, polished leather nagra shoes, simple gold chain. Expression: introspective and idealistic, eyes showing evolution from dependency to self-awareness, gentle smile. Background and setting: expansive elegant Calcutta mansion courtyard with marble pillars, hanging jasmine garlands, fountain with lotus flowers, vintage furniture, soft afternoon light filtering through silk curtains, classical Bengali architecture, British-Indian colonial flag or emblem visible, rose petals scattered on marble floor, gentle breeze moving curtains. Atmosphere: romantic and poetic mood inspired by Tagore's literature, soft golden lighting creating dreamy ambiance, sense of cultural refinement and emotional depth. Character occupies 25% of frame, emphasizing the opulent cultural setting."
+    visualPrompt: "Professional portrait of Anupam, a sensitive 25-year-old Bengali gentleman from early 1900s Calcutta. Face: refined oval features with fair complexion, large expressive dark eyes reflecting deep sensitivity and contemplation, well-defined eyebrows, straight aristocratic nose, full lips often in thoughtful expression, clean-shaven with soft facial structure. Hair: thick black hair, neatly combed and parted, occasionally falling across forehead during moments of deep thought. Body: elegant slim build, graceful posture reflecting upper-class upbringing, long artistic fingers perfect for holding books and writing. Clothing: sophisticated colonial-era Bengali formal wear - crisp white cotton kurta with subtle gold border, perfectly draped dhoti, silk chaddar (shawl) draped over shoulder, simple gold chain visible at neck. Expression: introspective and idealistic, eyes showing evolution from dependency to self-awareness, gentle smile suggesting inner growth and wisdom gained through experience."
   },
   {
     id: "paradoxical-sazid",
@@ -63,159 +63,29 @@ const bookCharacters = [
     description: "ইসলামের বিরুদ্ধে উত্থাপিত প্রশ্নগুলোর যৌক্তিক ও দার্শনিক উত্তর প্রদানকারী একজন তীক্ষ্ণবুদ্ধিসম্পন্ন গবেষক।",
     avatar: "🧠",
     personality: ["Logical", "Rational", "Apologetic", "Inquisitive"],
-    visualPrompt: "Contemporary environmental portrait of Paradoxical Sazid positioned in left third of composition, a brilliant 30-year-old Bangladeshi Islamic researcher. Face: sharp intellectual features with medium brown complexion, penetrating dark eyes behind stylish rectangular glasses showing analytical mind, well-groomed thick eyebrows, defined cheekbones, neatly trimmed beard following Islamic tradition, confident smile. Hair: thick black hair, modern styled and well-maintained, slight receding hairline. Body: medium build with confident academic posture, gestures suggesting articulate communication. Clothing: contemporary professional attire - crisp white dress shirt, dark blue blazer, subtle patterned tie, pressed trousers, polished leather shoes, elegant wristwatch. Accessories: modern rectangular glasses, smartphone, leather portfolio, quality pen. Expression: intelligent concentration mixed with gentle confidence, eyes showing deep contemplation and rational thinking. Background and setting: expansive modern Islamic research center with floor-to-ceiling bookshelves filled with Islamic texts, contemporary computers displaying theological research, natural lighting from large windows, whiteboard with complex philosophical diagrams, comfortable reading chairs, Bangladesh flag 🇧🇩 prominently displayed, university campus visible through windows. Atmosphere: academic excellence and intellectual rigor, bright natural lighting suggesting clarity of thought, organized study environment, sense of bridging traditional Islamic scholarship with contemporary challenges. Character takes 30% of frame, showcasing the modern academic environment."
-  }
-];
-
-// Comprehensive world locations with detailed cultural contexts and None option
-const worldLocations = [
-  { 
-    id: "none",
-    name: "🌐 Default Setting",
-    description: "Character's original environment",
-    prompt: "",
-    flag: ""
+    visualPrompt: "Professional portrait of Paradoxical Sazid, a brilliant 30-year-old Bangladeshi Islamic researcher and apologist. Face: sharp intellectual features with medium brown complexion, penetrating dark eyes behind stylish rectangular glasses showing analytical mind, well-groomed thick eyebrows, defined cheekbones, neatly trimmed beard following Islamic tradition, confident smile reflecting rational approach to complex questions. Hair: thick black hair, modern styled and well-maintained, slight receding hairline showing maturity. Body: medium build with confident academic posture, gestures suggesting articulate communication style. Clothing: contemporary professional attire - crisp white dress shirt, dark blue blazer, subtle patterned tie, polished leather shoes, elegant wristwatch. Accessories: modern rectangular glasses, quality pen for note-taking. Expression: intelligent concentration mixed with gentle confidence, eyes showing deep contemplation and rational thinking, slight smile suggesting readiness to engage in intellectual discourse."
   },
-  { 
-    id: "bangladesh", 
-    name: "🇧🇩 Bangladesh", 
-    description: "Lush green rice paddies, traditional villages, rivers and boats",
-    prompt: "rural Bengali countryside, emerald green rice paddies stretching to horizon, traditional clay and bamboo houses with thatched roofs, winding rivers with wooden boats, tall coconut palms, ancient banyan trees, monsoon clouds, village markets with colorful saris, golden mustard fields, peaceful village life",
-    flag: "🇧🇩"
-  },
-  { 
-    id: "england", 
-    name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", 
-    description: "Rolling countryside, Gothic architecture, misty mornings",
-    prompt: "English countryside with rolling green hills, Gothic stone architecture, ancient castles with ivy-covered walls, misty mornings with soft fog, cobblestone streets, red telephone boxes, traditional English gardens with roses, Tudor-style buildings, gray stone bridges over gentle streams",
-    flag: "🇬🇧"
-  },
-  { 
-    id: "japan", 
-    name: "🇯🇵 Japan", 
-    description: "Cherry blossoms, traditional temples, zen gardens",
-    prompt: "Japanese landscape with delicate pink cherry blossoms, traditional wooden temples with curved roofs, perfectly manicured zen gardens with raked gravel, stone lanterns, bamboo forests, koi ponds with wooden bridges, Mount Fuji in background, peaceful meditation spaces",
-    flag: "🇯🇵"
-  },
-  { 
-    id: "france", 
-    name: "🇫🇷 France", 
-    description: "Romantic Paris streets, lavender fields, elegant châteaux",
-    prompt: "French setting with romantic Parisian streets, Haussmanian architecture, endless purple lavender fields in Provence, elegant Renaissance châteaux, wine vineyards with rolling hills, outdoor cafés with wrought iron tables, Seine River with stone bridges, golden sunset light",
-    flag: "🇫🇷"
-  },
-  { 
-    id: "egypt", 
-    name: "🇪🇬 Egypt", 
-    description: "Ancient pyramids, desert landscapes, Nile river",
-    prompt: "Egyptian landscape with ancient pyramids and sphinx, golden desert sands with dunes, palm oases with date trees, Nile River with traditional felucca boats, hieroglyphic temple walls, columns with lotus capitals, warm desert lighting, archaeological sites",
-    flag: "🇪🇬"
-  },
-  { 
-    id: "india", 
-    name: "🇮🇳 India", 
-    description: "Colorful markets, majestic palaces, spice gardens",
-    prompt: "Indian setting with vibrant spice markets, ornate Mughal palaces with marble inlays, colorful traditional clothing, sacred Ganges River, ancient temples with intricate carvings, monsoon gardens with lotus ponds, bustling bazaars with silk textiles, incense smoke",
-    flag: "🇮🇳"
-  },
-  { 
-    id: "morocco", 
-    name: "🇲🇦 Morocco", 
-    description: "Desert dunes, ancient medinas, colorful souks",
-    prompt: "Moroccan landscape with golden sand dunes, ancient medina walls, colorful souks with hanging lanterns, ornate Islamic architecture with geometric patterns, traditional riads with courtyard fountains, Atlas Mountains, desert sunset with warm amber light",
-    flag: "🇲🇦"
-  },
-  { 
-    id: "norway", 
-    name: "🇳🇴 Norway", 
-    description: "Dramatic fjords, northern lights, snow-capped peaks",
-    prompt: "Norwegian landscape with dramatic fjords, steep cliffs reflecting in dark water, snow-capped mountain peaks, northern lights aurora borealis in night sky, wooden stave churches, pine forests, crystalline waterfalls, midnight sun phenomenon",
-    flag: "🇳🇴"
-  },
-  { 
-    id: "iceland", 
-    name: "🇮🇸 Iceland", 
-    description: "Volcanic landscapes, geysers, glacial formations",
-    prompt: "Icelandic terrain with volcanic black rocks, steaming geysers shooting water skyward, massive glaciers with blue ice formations, dramatic waterfalls, lupine flower fields, northern lights, otherworldly landscapes, geothermal hot springs",
-    flag: "🇮🇸"
-  }
-];
-
-// Comprehensive time periods with detailed historical contexts and None option
-const timePeriods = [
-  { 
-    id: "none", 
-    name: "📅 Original Era", 
-    description: "Character's default time period", 
-    prompt: ""
-  },
-  { 
-    id: "prehistoric", 
-    name: "🦕 Prehistoric Era", 
-    description: "Primordial world with dinosaurs and volcanic activity (65M BCE)", 
-    prompt: "prehistoric landscape, massive dinosaurs roaming, dense primordial forests with giant ferns, active volcanoes with lava flows, meteor showers, primitive earth atmosphere, ancient ocean life, evolutionary dawn"
-  },
-  { 
-    id: "ancient", 
-    name: "🏛️ Ancient Civilization", 
-    description: "Golden age of pyramids, temples, and classical culture (3000 BCE - 500 CE)", 
-    prompt: "ancient civilization, marble temples with towering columns, Egyptian pyramids under construction, Roman forums with togas, Greek amphitheaters, chariot races, classical sculptures, philosophical gardens, historical grandeur"
-  },
-  { 
-    id: "medieval", 
-    name: "🏰 Medieval Era", 
-    description: "Age of knights, castles, and feudal kingdoms (500 - 1500 CE)", 
-    prompt: "medieval times, imposing stone castles with towers, knights in shining armor on horseback, feudal villages with thatched cottages, heraldic banners fluttering, torch-lit great halls, monastery libraries, guild workshops"
-  },
-  { 
-    id: "renaissance", 
-    name: "🎨 Renaissance Period", 
-    description: "Artistic and scientific rebirth in Europe (1400 - 1600)", 
-    prompt: "renaissance era, ornate palazzo architecture, artists' studios with easels, scientific instruments, elegant court dress with rich fabrics, marble sculptures being carved, printed books, cultural refinement, humanistic ideals"
-  },
-  { 
-    id: "victorian", 
-    name: "🎩 Victorian Era", 
-    description: "Industrial revolution and British elegance (1837 - 1901)", 
-    prompt: "victorian setting, industrial steam engines, gas-lit London streets, elegant horse-drawn carriages, formal Victorian dress, ornate furniture, railway stations, smoking chimneys, technological progress"
-  },
-  { 
-    id: "1920s", 
-    name: "🎷 Jazz Age", 
-    description: "Roaring twenties with art deco and cultural revolution (1920s)", 
-    prompt: "1920s jazz age, art deco architecture with geometric patterns, vintage automobiles, flapper fashion, speakeasy clubs, jazz musicians, radio broadcasts, economic prosperity, cultural liberation"
-  },
-  { 
-    id: "present", 
-    name: "🌐 Digital Age", 
-    description: "Contemporary world with internet and smartphones (2020s)", 
-    prompt: "modern contemporary setting, smartphones and digital devices, high-speed internet, social media, sustainable technology, urban lifestyle, global connectivity, AI integration, environmental consciousness"
-  },
-  { 
-    id: "cyberpunk", 
-    name: "🌃 Cyberpunk Future", 
-    description: "High-tech, low-life dystopian society (2080s)", 
-    prompt: "cyberpunk future cityscape, towering neon-lit skyscrapers, holographic advertisements, cybernetic implants, flying vehicles, digital rain, underground markets, technological dystopia, artificial intelligence"
-  },
-  { 
-    id: "space-age", 
-    name: "🚀 Galactic Civilization", 
-    description: "Interstellar society with space colonies (2300s)", 
-    prompt: "space age civilization, floating space stations, interstellar ships, alien worlds with multiple moons, advanced technology beyond recognition, cosmic backgrounds with nebulae, post-human evolution, galactic architecture"
+  {
+    id: "sherlock-holmes",
+    name: "Sherlock Holmes",
+    bookTitle: "The Adventures of Sherlock Holmes",
+    author: "Arthur Conan Doyle",
+    description: "The world's greatest consulting detective, master of deductive reasoning and observation.",
+    avatar: "🕵️",
+    personality: ["Analytical", "Observant", "Logical", "Eccentric"],
+    visualPrompt: "Professional portrait of Sherlock Holmes, the legendary Victorian detective in his prime. Face: sharp angular features with pale English complexion, penetrating steel-gray eyes that seem to see through everything with analytical intensity, prominent aquiline nose, thin lips often pursed in concentration, high cheekbones, clean-shaven with defined jawline. Hair: thick black hair, slightly wavy and perfectly groomed, receding slightly at the temples showing maturity and wisdom. Body: tall lean build around 6 feet, elegant posture with ramrod-straight spine, long slender fingers perfect for violin playing and delicate investigative work. Clothing: impeccably tailored Victorian gentleman's attire - charcoal gray wool frock coat with silk lapels, crisp white wing-collar shirt, silver pocket watch chain visible, perfectly knotted dark tie, polished black leather shoes. Accessories: iconic curved briar pipe held thoughtfully, magnifying glass in breast pocket, deerstalker hat nearby. Expression: intense intellectual concentration with slight knowing smile, eyes showing brilliant deductive mind at work, commanding presence that suggests complete confidence in his abilities."
   }
 ];
 
 export default function BoipokaCharacterImageGenerator() {
   const [selectedCharacter, setSelectedCharacter] = useState(bookCharacters[0]);
-  const [selectedLocation, setSelectedLocation] = useState(worldLocations[0]);
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState(timePeriods[0]);
-  const [customPrompt, setCustomPrompt] = useState("");
+  const [additionalPrompt, setAdditionalPrompt] = useState("");
   const [finalPrompt, setFinalPrompt] = useState("");
-  const [artStyle, setArtStyle] = useState("realistic");
+  const [artStyle, setArtStyle] = useState("photorealistic");
   const [imageQuality, setImageQuality] = useState("ultra");
   const [error, setError] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [useCustomPrompt, setUseCustomPrompt] = useState(false);
+  const [useAdditionalPrompt, setUseAdditionalPrompt] = useState(false);
 
   // Generate random seed for each new image
   const [seed, setSeed] = useState(42);
@@ -228,10 +98,6 @@ export default function BoipokaCharacterImageGenerator() {
     }
     if (!artStyle) {
       setError("Please select an art style");
-      return false;
-    }
-    if (useCustomPrompt && !customPrompt.trim()) {
-      setError("Please enter a custom prompt or disable custom prompt option");
       return false;
     }
     return true;
@@ -256,68 +122,60 @@ export default function BoipokaCharacterImageGenerator() {
 
     setIsGenerating(true);
 
-    // Ultra-enhanced quality descriptors
+    // Quality descriptors
     const qualityEnhancers = imageQuality === "ultra" 
       ? [
-        "ultra high definition", "8K resolution", "photorealistic masterpiece", "hyper-detailed", 
-        "professional studio lighting", "award-winning photography", "crystal clear focus", 
-        "perfect composition", "cinematic quality", "museum-worthy artwork", "flawless rendering"
+        "ultra high definition", "8K resolution", "professional photography", "hyper-detailed", 
+        "studio lighting", "award-winning portrait", "crystal clear focus", 
+        "perfect composition", "cinematic quality", "flawless rendering"
       ]
       : imageQuality === "high"
       ? [
         "high quality", "4K resolution", "detailed", "professional", "sharp focus", 
-        "perfect lighting", "cinematic", "artistic excellence"
+        "perfect lighting", "cinematic"
       ]
       : ["good quality", "detailed", "clear focus", "professional"];
     
-    // Art style specific enhancements
-    const styleEnhancer = artStyle === "realistic" 
+    // Enhanced art style options
+    const styleEnhancer = artStyle === "photorealistic" 
       ? "hyperrealistic photography, ultra-detailed facial features, perfect skin texture, natural lighting, DSLR camera quality, professional portrait photography"
-      : artStyle === "anime" 
-      ? "studio anime quality, detailed character design, vibrant colors, perfect anime anatomy, professional manga illustration, cel-shaded perfection"
-      : artStyle === "digital-art"
-      ? "digital art masterpiece, concept art quality, detailed character design, professional digital illustration, perfect digital painting technique"
       : artStyle === "oil-painting"
       ? "classical oil painting, renaissance master technique, fine art quality, painterly brushstrokes, museum piece, traditional medium mastery"
       : artStyle === "watercolor"
       ? "watercolor painting masterpiece, soft brush technique, flowing colors, artistic transparency, traditional watercolor paper texture"
-      : artStyle === "sketch"
+      : artStyle === "digital-art"
+      ? "digital art masterpiece, concept art quality, detailed character design, professional digital illustration, perfect digital painting technique"
+      : artStyle === "pencil-sketch"
       ? "detailed pencil sketch, fine line art, professional drawing technique, artistic study, graphite mastery, architectural precision"
+      : artStyle === "charcoal"
+      ? "charcoal drawing masterpiece, dramatic shadows and highlights, expressive strokes, classical drawing technique, fine art quality"
+      : artStyle === "acrylic"
+      ? "acrylic painting, vibrant colors, textured brushwork, contemporary art style, expressive technique, gallery quality"
+      : artStyle === "pastel"
+      ? "soft pastel drawing, delicate color blending, gentle texture, artistic refinement, traditional pastel technique"
       : "artistic masterpiece, creative illustration, professional quality";
 
-    // Enhanced composition instructions
-    const compositionInstructions = [
-      "wide-angle environmental shot",
-      "character positioned strategically within frame taking maximum 30% of total composition",
-      "70% of frame dedicated to rich environmental storytelling and atmospheric details",
-      "cinematic composition with rule of thirds",
-      "extensive background and foreground elements visible",
-      "cultural flag prominently displayed in scene"
-    ];
+    // Comprehensive prompt assembly - ADDITIONAL PROMPT IS COMBINED WITH ALL OTHER PROMPTS
+    const baseCharacterPrompt = selectedCharacter.id !== "none" ? `Character: ${selectedCharacter.visualPrompt}` : "";
 
-    // Comprehensive prompt assembly ensuring ALL inputs are included
-    const baseCharacterPrompt = useCustomPrompt && customPrompt.trim() 
-      ? `Custom character description: ${customPrompt.trim()}`
-      : `Character: ${selectedCharacter.visualPrompt}`;
-
-    const locationPrompt = selectedLocation.id !== "none" ? `Location setting: ${selectedLocation.prompt}, ${selectedLocation.flag} flag prominently visible` : "";
-    const timePrompt = selectedTimePeriod.id !== "none" ? `Time period: ${selectedTimePeriod.prompt}` : "";
     const personalityPrompt = selectedCharacter.personality.length > 0 ? `Character personality traits: ${selectedCharacter.personality.join(', ')}` : "";
     const bookContextPrompt = selectedCharacter.id !== "none" ? `Literary context: character from "${selectedCharacter.bookTitle}" by ${selectedCharacter.author}` : "";
 
-    // Final comprehensive prompt with all inputs guaranteed
+    // Start building prompt parts with base character information
     const promptParts = [
-      compositionInstructions.join(", "),
       baseCharacterPrompt,
-      locationPrompt, 
-      timePrompt,
       personalityPrompt,
       bookContextPrompt,
       styleEnhancer,
       qualityEnhancers.join(", "),
-      "literary character visualization",
-      "environmental storytelling masterpiece"
+      "literary character portrait",
+      "character-focused composition"
     ].filter(part => part.trim() !== "");
+
+    // ADD additional prompt as EXTRA enhancement if provided
+    if (useAdditionalPrompt && additionalPrompt.trim()) {
+      promptParts.push(`Additional enhancements: ${additionalPrompt.trim()}`);
+    }
 
     const enhancedPrompt = promptParts.join(", ");
     
@@ -344,44 +202,37 @@ export default function BoipokaCharacterImageGenerator() {
     
     const a = document.createElement('a');
     a.href = imageUrl;
-    a.download = `boipoka-${selectedCharacter.id}-${selectedLocation.id}-${selectedTimePeriod.id}-${artStyle}-${imageQuality}-${Date.now()}.png`;
+    a.download = `boipoka-${selectedCharacter.id}-${artStyle}-${imageQuality}-${Date.now()}.png`;
     a.click();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      {/* Modern Minimalistic Header */}
-      <div className="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">B</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-slate-800">Boipoka.ai</h1>
-                <p className="text-sm text-slate-600">Character Visualizer</p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+      {/* Boipoka.AI Header */}
+      <div className="border-b border-blue-200 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
+        <div className="max-w-6xl mx-auto px-6 py-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <span className="text-white text-2xl font-bold">B</span>
             </div>
-            <div className="hidden md:flex items-center gap-6 text-sm text-slate-600">
-              <span className="flex items-center gap-2">🌍 10 Locations</span>
-              <span className="flex items-center gap-2">⏰ 10 Time Periods</span>
-              <span className="flex items-center gap-2">🎭 5 Characters</span>
+            <div>
+              <h1 className="text-3xl font-bold">Boipoka Imagene</h1>
+              <p className="text-blue-100">Imagine + Generate Your Favourite Characters</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Sidebar - Controls */}
-          <div className="lg:col-span-1 space-y-6">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Left Column - Controls */}
+          <div className="space-y-6">
             {/* Character Selection */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-              <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                  <span className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center text-blue-600 text-sm">📚</span>
-                  Character
+            <div className="bg-white rounded-2xl border border-blue-200 shadow-lg">
+              <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+                <h2 className="text-xl font-bold text-blue-800 flex items-center gap-3">
+                  <span className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">📚</span>
+                  Select Character
                 </h2>
               </div>
               <div className="p-4 space-y-3 max-h-80 overflow-y-auto">
@@ -389,17 +240,18 @@ export default function BoipokaCharacterImageGenerator() {
                   <button
                     key={character.id}
                     onClick={() => setSelectedCharacter(character)}
-                    className={`w-full p-4 rounded-xl text-left transition-all duration-200 ${
+                    className={`w-full p-4 rounded-xl text-left transition-all duration-300 ${
                       selectedCharacter.id === character.id
-                        ? "bg-blue-50 border-2 border-blue-200 shadow-sm"
-                        : "border-2 border-transparent hover:bg-slate-50"
+                        ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-300 shadow-md transform scale-105"
+                        : "bg-blue-50 border-2 border-transparent hover:bg-blue-100 hover:border-blue-200"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl">{character.avatar}</div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-slate-800 truncate text-sm">{character.name}</h3>
-                        <p className="text-xs text-slate-500 truncate">{character.author}</p>
+                    <div className="flex items-center gap-4">
+                      <div className="text-3xl">{character.avatar}</div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-blue-800">{character.name}</h3>
+                        <p className="text-sm text-blue-600">{character.author}</p>
+                        <p className="text-xs text-blue-500 mt-1">{character.bookTitle}</p>
                       </div>
                     </div>
                   </button>
@@ -407,184 +259,159 @@ export default function BoipokaCharacterImageGenerator() {
               </div>
             </div>
 
-            {/* Location Selection */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-              <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                  <span className="w-5 h-5 bg-green-100 rounded flex items-center justify-center text-green-600 text-sm">🌍</span>
-                  Location
+            {/* Art Style Selection */}
+            <div className="bg-white rounded-2xl border border-blue-200 shadow-lg">
+              <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+                <h2 className="text-xl font-bold text-blue-800 flex items-center gap-3">
+                  <span className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">🎨</span>
+                  Art Style
                 </h2>
               </div>
-              <div className="p-4 space-y-2">
-                {worldLocations.map((location) => (
+              <div className="p-4 grid grid-cols-2 gap-3">
+                {[
+                  { value: "photorealistic", label: "📸 Photorealistic", description: "Ultra-realistic photography" },
+                  { value: "oil-painting", label: "🖼️ Oil Painting", description: "Classical fine art" },
+                  { value: "watercolor", label: "🎨 Watercolor", description: "Soft flowing colors" },
+                  { value: "digital-art", label: "💻 Digital Art", description: "Modern digital illustration" },
+                  { value: "pencil-sketch", label: "✏️ Pencil Sketch", description: "Hand-drawn graphite" },
+                  { value: "charcoal", label: "⚫ Charcoal", description: "Dramatic shadows" },
+                  { value: "acrylic", label: "🌈 Acrylic", description: "Vibrant paint texture" },
+                  { value: "pastel", label: "🎭 Pastel", description: "Soft color blending" }
+                ].map((style) => (
                   <button
-                    key={location.id}
-                    onClick={() => setSelectedLocation(location)}
-                    className={`w-full p-3 rounded-lg text-left transition-all duration-200 text-sm ${
-                      selectedLocation.id === location.id
-                        ? "bg-green-50 border border-green-200"
-                        : "hover:bg-slate-50"
+                    key={style.value}
+                    onClick={() => setArtStyle(style.value)}
+                    className={`p-4 rounded-xl text-left transition-all duration-300 ${
+                      artStyle === style.value
+                        ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg transform scale-105"
+                        : "bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200"
                     }`}
                   >
-                    <div className="font-medium text-slate-800">{location.name}</div>
-                    <div className="text-xs text-slate-500 mt-1">{location.description}</div>
+                    <div className="font-bold text-sm">{style.label}</div>
+                    <div className="text-xs opacity-80 mt-1">{style.description}</div>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Time Period Selection */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-              <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                  <span className="w-5 h-5 bg-purple-100 rounded flex items-center justify-center text-purple-600 text-sm">⏰</span>
-                  Time Period
+            {/* Quality Selection */}
+            <div className="bg-white rounded-2xl border border-blue-200 shadow-lg">
+              <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+                <h2 className="text-xl font-bold text-blue-800 flex items-center gap-3">
+                  <span className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">💎</span>
+                  Quality Level
                 </h2>
               </div>
-              <div className="p-4 space-y-2 max-h-60 overflow-y-auto">
-                {timePeriods.map((period) => (
+              <div className="p-4 space-y-3">
+                {[
+                  { value: "ultra", label: "💎 Ultra (8K)", description: "Maximum detail and quality" },
+                  { value: "high", label: "⭐ High (4K)", description: "Professional quality" },
+                  { value: "standard", label: "✨ Standard", description: "Good quality" }
+                ].map((quality) => (
                   <button
-                    key={period.id}
-                    onClick={() => setSelectedTimePeriod(period)}
-                    className={`w-full p-3 rounded-lg text-left transition-all duration-200 text-sm ${
-                      selectedTimePeriod.id === period.id
-                        ? "bg-purple-50 border border-purple-200"
-                        : "hover:bg-slate-50"
+                    key={quality.value}
+                    onClick={() => setImageQuality(quality.value)}
+                    className={`w-full p-4 rounded-xl text-left transition-all duration-300 ${
+                      imageQuality === quality.value
+                        ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg"
+                        : "bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200"
                     }`}
                   >
-                    <div className="font-medium text-slate-800">{period.name}</div>
-                    <div className="text-xs text-slate-500 mt-1">{period.description}</div>
+                    <div className="font-bold text-sm">{quality.label}</div>
+                    <div className="text-xs opacity-80 mt-1">{quality.description}</div>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Middle Column - Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Art Style & Quality */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-                <div className="p-6 border-b border-slate-100">
-                  <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                    <span className="w-5 h-5 bg-pink-100 rounded flex items-center justify-center text-pink-600 text-sm">🎨</span>
-                    Art Style
-                  </h2>
-                </div>
-                <div className="p-4 grid grid-cols-2 gap-3">
-                  {[
-                    { value: "realistic", label: "📸 Realistic" },
-                    { value: "anime", label: "🎌 Anime" },
-                    { value: "digital-art", label: "💻 Digital" },
-                    { value: "oil-painting", label: "🖼️ Oil Paint" },
-                    { value: "watercolor", label: "🎨 Watercolor" },
-                    { value: "sketch", label: "✏️ Sketch" }
-                  ].map((style) => (
-                    <button
-                      key={style.value}
-                      onClick={() => setArtStyle(style.value)}
-                      className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        artStyle === style.value
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                      }`}
-                    >
-                      {style.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-                <div className="p-6 border-b border-slate-100">
-                  <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                    <span className="w-5 h-5 bg-orange-100 rounded flex items-center justify-center text-orange-600 text-sm">💎</span>
-                    Quality
-                  </h2>
-                </div>
-                <div className="p-4 space-y-3">
-                  {[
-                    { value: "ultra", label: "💎 Ultra (8K)", description: "Maximum detail" },
-                    { value: "high", label: "⭐ High (4K)", description: "Professional" },
-                    { value: "standard", label: "✨ Standard", description: "Good quality" }
-                  ].map((quality) => (
-                    <button
-                      key={quality.value}
-                      onClick={() => setImageQuality(quality.value)}
-                      className={`w-full p-3 rounded-lg text-left transition-all duration-200 ${
-                        imageQuality === quality.value
-                          ? "bg-orange-50 border border-orange-200"
-                          : "hover:bg-slate-50"
-                      }`}
-                    >
-                      <div className="font-medium text-slate-800 text-sm">{quality.label}</div>
-                      <div className="text-xs text-slate-500">{quality.description}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Custom Prompt */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-              <div className="p-6 border-b border-slate-100">
+          {/* Right Column - Additional Prompt & Generation */}
+          <div className="space-y-6">
+            {/* Additional Prompt Area */}
+            <div className="bg-white rounded-2xl border border-blue-200 shadow-lg">
+              <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-cyan-50">
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
-                    id="useCustomPrompt"
-                    checked={useCustomPrompt}
-                    onChange={(e) => setUseCustomPrompt(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    id="useAdditionalPrompt"
+                    checked={useAdditionalPrompt}
+                    onChange={(e) => setUseAdditionalPrompt(e.target.checked)}
+                    className="w-5 h-5 rounded border-blue-300 text-blue-600 focus:ring-blue-500"
                   />
-                  <label htmlFor="useCustomPrompt" className="text-lg font-semibold text-slate-800">
-                    Custom Description
-                  </label>
+                  <h2 className="text-xl font-bold text-blue-800 flex items-center gap-3">
+                    <span className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">✨</span>
+                    Additional Prompt
+                  </h2>
                 </div>
               </div>
-              {useCustomPrompt && (
-                <div className="p-6">
-                  <textarea
-                    placeholder="Describe your unique vision in detail..."
-                    value={customPrompt}
-                    onChange={(e) => setCustomPrompt(e.target.value)}
-                    className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"
-                    rows={4}
-                    maxLength={2000}
-                  />
+              <div className="p-6">
+                <textarea
+                  placeholder={useAdditionalPrompt ? 
+                    "Add extra details to enhance the character portrait... (e.g., 'golden hour lighting, mystical aura, holding ancient scroll, ornate background decorations, soft glow around character')" : 
+                    "Enable to add additional details that will be combined with character description..."
+                  }
+                  value={additionalPrompt}
+                  onChange={(e) => setAdditionalPrompt(e.target.value)}
+                  disabled={!useAdditionalPrompt}
+                  className={`w-full px-4 py-4 border-2 rounded-xl resize-none text-sm transition-all duration-300 ${
+                    useAdditionalPrompt 
+                      ? "border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white text-blue-800" 
+                      : "border-blue-100 bg-blue-50 text-blue-400 cursor-not-allowed"
+                  }`}
+                  rows={8}
+                  maxLength={2000}
+                />
+                <div className="flex justify-between items-center mt-3">
+                  <p className="text-xs text-blue-600">
+                    {useAdditionalPrompt ? 
+                      "✅ These details will be ADDED to the character, style, and quality prompts" : 
+                      "❌ Enable checkbox above to add extra enhancement details"
+                    }
+                  </p>
+                  <span className="text-xs text-blue-500 font-mono bg-blue-50 px-2 py-1 rounded">
+                    {additionalPrompt.length}/2000
+                  </span>
                 </div>
-              )}
+                {useAdditionalPrompt && additionalPrompt.length > 0 && (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-xs text-green-700 font-semibold">
+                      ✨ Additional details will be combined with all existing prompts for enhanced results!
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Generate Button */}
             <button
               onClick={generateCharacterImage}
               disabled={isGenerating || selectedCharacter.id === "none"}
-              className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-4 px-6 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 hover:from-blue-700 hover:via-blue-800 hover:to-cyan-700 text-white font-bold py-6 px-8 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 text-xl"
             >
               {isGenerating ? (
-                <div className="flex items-center justify-center gap-3">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Creating Masterpiece...</span>
                 </div>
               ) : (
-                <span>🚀 Generate Character Art</span>
+                <span>🚀 Generate Character Portrait</span>
               )}
             </button>
 
             {/* Error Display */}
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+              <div className="p-4 bg-red-50 border-2 border-red-200 rounded-xl">
                 <div className="flex items-center gap-3">
-                  <span className="text-red-500 text-xl">⚠️</span>
-                  <p className="text-red-600 font-medium">{error}</p>
+                  <span className="text-red-500 text-2xl">⚠️</span>
+                  <p className="text-red-700 font-semibold">{error}</p>
                 </div>
               </div>
             )}
 
             {/* Generated Image */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
-              <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-semibold text-slate-800">Generated Artwork</h2>
+            <div className="bg-white rounded-2xl border border-blue-200 shadow-lg">
+              <div className="p-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+                <h2 className="text-xl font-bold text-blue-800">Generated Portrait</h2>
               </div>
               <div className="p-6">
                 {imageUrl && finalPrompt ? (
@@ -593,82 +420,106 @@ export default function BoipokaCharacterImageGenerator() {
                       <img 
                         src={imageUrl} 
                         alt={`AI Generated ${selectedCharacter.name}`}
-                        className="w-full h-96 object-cover rounded-lg border border-slate-200"
+                        className="w-full h-96 object-cover rounded-xl border-2 border-blue-200 shadow-lg"
                       />
-                      <div className="absolute top-3 right-3 bg-black/70 text-white px-3 py-1 rounded-lg text-sm font-medium">
+                      <div className="absolute top-4 right-4 bg-black/80 text-white px-4 py-2 rounded-lg text-sm font-bold">
                         {artStyle.toUpperCase()} • {imageQuality.toUpperCase()}
                       </div>
+                      {useAdditionalPrompt && additionalPrompt.trim() && (
+                        <div className="absolute bottom-4 left-4 bg-green-600/90 text-white px-3 py-1 rounded-lg text-xs font-bold">
+                          + Enhanced
+                        </div>
+                      )}
                     </div>
                     
                     <div className="flex gap-3 justify-center">
                       <button
                         onClick={downloadImage}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                        className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-bold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl"
                       >
                         📥 Download
                       </button>
                       <button
                         onClick={clearImage}
-                        className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                        className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-bold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl"
                       >
                         🗑️ Clear
                       </button>
                       <button
                         onClick={generateCharacterImage}
                         disabled={isGenerating}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold transition-all duration-300 disabled:opacity-50 flex items-center gap-2 shadow-lg hover:shadow-xl"
                       >
                         🔄 Regenerate
                       </button>
                     </div>
                     
-                    <div className="text-sm text-slate-600 bg-slate-50 p-4 rounded-lg space-y-1">
+                    <div className="text-sm text-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-200 space-y-2">
                       <div><strong>Character:</strong> {selectedCharacter.name}</div>
-                      <div><strong>Location:</strong> {selectedLocation.name}</div>
-                      <div><strong>Era:</strong> {selectedTimePeriod.name}</div>
-                      <div><strong>Style:</strong> {artStyle} • Quality: {imageQuality}</div>
+                      <div><strong>Style:</strong> {artStyle.replace('-', ' ')} • Quality: {imageQuality}</div>
                       <div><strong>Seed:</strong> {seed}</div>
+                      {useAdditionalPrompt && additionalPrompt.trim() && <div><strong>Enhancement:</strong> ✅ Additional prompts applied</div>}
                     </div>
                   </div>
                 ) : finalPrompt && isGenerating ? (
-                  <div className="text-center py-16">
-                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                    <p className="text-slate-600 font-medium mb-2">Creating ultra-detailed artwork...</p>
-                    <p className="text-sm text-slate-500">This may take a few moments</p>
+                  <div className="text-center py-20">
+                    <div className="w-20 h-20 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+                    <p className="text-blue-700 font-bold text-xl mb-4">Creating Character Portrait...</p>
+                    <p className="text-blue-600 text-lg mb-2">Character: {selectedCharacter.name}</p>
+                    <p className="text-blue-500 text-lg">Style: {artStyle.replace('-', ' ')} • Quality: {imageQuality}</p>
+                    {useAdditionalPrompt && additionalPrompt.trim() && (
+                      <p className="text-green-600 text-sm mt-2">+ Additional enhancements applied</p>
+                    )}
                   </div>
                 ) : (
-                  <div className="text-center py-16 border-2 border-dashed border-slate-300 rounded-lg">
-                    <span className="text-6xl mb-4 block">{selectedCharacter.avatar}</span>
-                    <p className="text-slate-600 font-medium mb-2">Ready to create artwork</p>
-                    <p className="text-sm text-slate-500">Select options and click generate</p>
+                  <div className="text-center py-20 border-2 border-dashed border-blue-300 rounded-xl bg-gradient-to-br from-blue-25 to-cyan-25">
+                    <span className="text-8xl mb-6 block">{selectedCharacter.avatar}</span>
+                    <p className="text-blue-700 font-bold text-xl mb-2">Ready to Create Portrait</p>
+                    <p className="text-blue-600">Select character, style, and generate!</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Selected Character Info */}
+            {/* Character Info */}
             {selectedCharacter.id !== "none" && (
-              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200 p-6">
+              <div className="bg-gradient-to-r from-blue-100 via-cyan-50 to-blue-100 rounded-2xl border-2 border-blue-300 p-6 shadow-lg">
                 <div className="flex items-start gap-4">
-                  <div className="text-4xl">{selectedCharacter.avatar}</div>
+                  <div className="text-5xl">{selectedCharacter.avatar}</div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-1">{selectedCharacter.name}</h3>
-                    <p className="text-sm text-blue-600 mb-2 font-medium">
+                    <h3 className="text-xl font-bold text-blue-800 mb-2">{selectedCharacter.name}</h3>
+                    <p className="text-blue-700 font-semibold mb-2">
                       "{selectedCharacter.bookTitle}" by {selectedCharacter.author}
                     </p>
-                    <p className="text-sm text-slate-600 mb-3 leading-relaxed">{selectedCharacter.description}</p>
+                    <p className="text-blue-600 mb-4 leading-relaxed">{selectedCharacter.description}</p>
                     {selectedCharacter.personality.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {selectedCharacter.personality.map((trait) => (
                           <span
                             key={trait}
-                            className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium"
+                            className="px-3 py-1 bg-blue-200 text-blue-800 text-sm rounded-full font-semibold"
                           >
                             {trait}
                           </span>
                         ))}
                       </div>
                     )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Additional Prompt Info */}
+            {useAdditionalPrompt && additionalPrompt.trim() && (
+              <div className="bg-gradient-to-r from-green-100 via-emerald-50 to-green-100 rounded-2xl border-2 border-green-300 p-6 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="text-5xl">✨</div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-green-800 mb-2">Additional Enhancements</h3>
+                    <p className="text-green-700 font-semibold mb-2">Combined with character description</p>
+                    <p className="text-green-600 text-sm leading-relaxed bg-green-50 p-3 rounded-lg">
+                      "{additionalPrompt.substring(0, 200)}{additionalPrompt.length > 200 ? '...' : ''}"
+                    </p>
                   </div>
                 </div>
               </div>
