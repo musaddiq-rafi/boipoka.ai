@@ -16,27 +16,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BoiBritto | Your Book Companion",
-  description: "Discover, read, and share books on BoiBritto.",
+  title: "BoiPoka | Your Book Companion",
+  description: "Discover, read, and share books on BoiPoka.",
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "BoiBritto",
+    siteName: "BoiPoka",
     title: {
-      default: "BoiBritto | Your Book Companion",
-      template: "%s - BoiBritto",
+      default: "BoiPoka | Your Book Companion",
+      template: "%s - BoiPoka",
     },
-    description: "Discover, read, and share books on BoiBritto.",
+    description: "Discover, read, and share books on BoiPoka.",
   },
   twitter: {
     card: "summary",
     title: {
-      default: "BoiBritto | Your Book Companion",
-      template: "%s - BoiBritto",
+      default: "BoiPoka | Your Book Companion",
+      template: "%s - BoiPoka",
     },
-    description: "Discover, read, and share books on BoiBritto.",
+    description: "Discover, read, and share books on BoiPoka.",
   },
 };
 

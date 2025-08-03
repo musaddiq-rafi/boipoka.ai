@@ -17,7 +17,7 @@ export default function HeroSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/signup" className="px-8 py-3 rounded-lg bg-emerald-600 text-white text-center font-medium hover:bg-emerald-700 transition">
-                Join BoiBritto
+                Join BoiPoka
               </Link>
               <Link href="/discover" className="px-8 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-center font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                 Explore Books
@@ -28,7 +28,7 @@ export default function HeroSection() {
             <div className="relative w-full max-w-md">
               <Image
                 src="/assets/hero-image.svg" 
-                alt="BoiBritto Platform Illustration"
+                alt="BoiPoka Platform Illustration"
                 width={500}
                 height={400}
                 className="object-contain"
