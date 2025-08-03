@@ -1,4 +1,4 @@
-# 📚 Boipoka.AI - Interactive Literary Character Chat Platform
+# 📚 Boipoka.AI - Interactive Literary Universe & AI Character Platform
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0.0-blue?logo=react)](https://reactjs.org/)
@@ -8,24 +8,31 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-> 🏆 **CodeSprint Project Submission** - Revolutionizing literary education through AI-powered character interactions
+> 🏆 **CodeSprint Project Submission** - Revolutionizing literary education through AI-powered character interactions and visual generation
 
 ## 🌟 Project Overview
 
-**Boipoka.AI** is an innovative full-stack web application that brings literary characters to life through intelligent AI conversations. Users can engage in meaningful dialogues with iconic characters from classic literature, creating an immersive educational experience that makes reading more interactive and engaging.
+**Boipoka.AI** is an innovative AI-powered platform that revolutionizes literature education by combining intelligent character conversations with stunning visual generation. Users can chat with iconic literary figures like Sherlock Holmes and আদুভাই, visualize characters through AI-generated artwork in multiple artistic styles, and engage with interactive literary games—all in one comprehensive ecosystem.
 
 ### 🎯 The Problem We Solve
 
-Traditional literary education often struggles to engage modern learners. Students find it difficult to connect with classic characters and understand their motivations. Boipoka.AI bridges this gap by enabling direct conversations with literary figures.
+Modern literary education struggles with engagement and accessibility:
+- Students can't connect emotionally with characters from different eras and cultures
+- Visual learners have difficulty imagining characters from text descriptions alone
+- Traditional reading lacks interactivity and immediate feedback
+- Literary tools are fragmented across multiple platforms with no unified experience
 
 ### 💡 Our Solution
 
-An AI-powered platform where users can:
-- Chat with famous literary characters like Sherlock Holmes, Elizabeth Bennet, and Gandalf
-- Maintain conversation history and build relationships with characters
-- Explore books through character interactions
-- Create personal collections and reading lists
-- Engage with a community of literature enthusiasts
+Boipoka.AI delivers a complete AI-powered literary ecosystem:
+
+**🤖 AI Character Conversations**: Chat with historically accurate literary figures who maintain authentic personalities and remember your interactions
+
+**🎨 Imagene Visual Generation**: Transform any character into stunning artwork across 8 professional styles (photorealistic, oil painting, watercolor, digital art, etc.)
+
+**🎮 Interactive Learning**: AI-powered games and educational tools that make literature exploration engaging and fun
+
+**📚 Smart Library Management**: Organize collections, track reading progress, and discover new books with social features
 
 ---
 
@@ -36,6 +43,15 @@ An AI-powered platform where users can:
 - **Contextual Conversations**: Characters remember previous interactions and respond accordingly  
 - **Multi-language Support**: Supports conversations in multiple languages including Bengali
 - **Real-time Messaging**: Instant responses with typing indicators
+
+### 🎨 **Imagene - AI Character Visualization**
+- **Multi-Style Art Generation**: Create character portraits in 8 artistic styles (photorealistic, oil painting, watercolor, digital art, pencil sketch, charcoal, acrylic, pastel)
+- **Quality Control**: Three quality levels (Ultra 8K, High 4K, Standard)
+- **Character Library**: Pre-configured prompts for iconic literary figures
+- **Custom Enhancement**: Additional prompt system for personalized details
+- **Instant Generation**: Powered by Pollinations AI for fast, high-quality results
+- **Download & Share**: Save generated artwork with metadata
+- **Literary Accuracy**: Character descriptions based on authentic literary sources
 
 ### 🎮 **Interactive Games**
 - **Character Guess Game**: AI-powered guessing game where the system tries to guess literary characters through strategic elimination questions
@@ -68,6 +84,7 @@ An AI-powered platform where users can:
 - **Date Validation**: Smart date validation for reading goals and progress
 - **Error Handling**: Comprehensive error management and user feedback
 - **Responsive API**: RESTful API with proper status codes and responses
+- **AI Powered Recommendation**: Suggests books based on user interests and reading history
 
 ### 🌐 **Enhanced Offline Experience**
 - **Smart Offline Popup**: Elegant modal overlay when network disconnects
@@ -80,6 +97,7 @@ An AI-powered platform where users can:
 - **Responsive Design**: Seamless experience across all devices
 - **Dark/Light Themes**: Customizable interface preferences
 - **Animated Interactions**: Smooth transitions and micro-animations
+- **Visual Gallery**: Browse and organize AI-generated character artwork
 - **Accessibility**: WCAG compliant design for all users
 - **Optimized Performance**: Removed unnecessary PWA features for faster loading
 
@@ -109,7 +127,8 @@ An AI-powered platform where users can:
 ### **AI & Integration**
 | Service | Purpose |
 |---------|---------|
-| **Google Generative AI** | Character conversation engine |
+| **Google Generative AI** | Character conversation engine & game AI |
+| **Pollinations AI** | High-quality image generation for Imagene |
 | **Firebase Auth** | User authentication system |
 | **Google Books API** | Book data and metadata |
 
@@ -131,7 +150,7 @@ An AI-powered platform where users can:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/boipoka.ai.git
+git clone https://github.com/musaddiq-rafi/boipoka.ai.git
 cd boipoka.ai
 ```
 
@@ -139,21 +158,6 @@ cd boipoka.ai
 ```bash
 cd boipoka-backend
 npm install
-```
-
-#### Backend Environment Variables (.env)
-```env
-FRONTEND_URL=
-WEB_API_KEY=
-ID_TOKEN=
-MONGODB_URL=
-FIREBASE_PROJECT_ID=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_PRIVATE_KEY=
-
-# for testing APIs
-TEST_USER_EMAIL=
-TEST_USER_PASS=
 ```
 
 ### 3. Frontend Setup
@@ -165,19 +169,13 @@ npm install
 cp .env.local.example .env.local
 ```
 
-#### Frontend Environment Variables (.env.local)
-```env
-# Firebase Configuration
-
-```
-
 ### 4. Run the Application
 
 #### Start Backend Server
 ```bash
 cd boipoka-backend
 npm run dev
-# Server runs on http://localhost:5000
+# Server runs on http://localhost:5001
 ```
 
 #### Start Frontend Development Server
@@ -197,19 +195,36 @@ npm run dev
 ## 📸 Screenshots
 
 ### 🏠 **Homepage**
-![Homepage](./screenshots/homepage.png)
+![Homepage](./boipoka-frontend/screenshots/homepage.png)
 *Modern landing page with hero section and feature highlights*
 
 ### 💬 **Character Chat Interface**
-![Character Chat](./screenshots/character-chat.png)
+![Character Chat](./boipoka-frontend/screenshots/character-chat.png)
 *Interactive chat interface with literary characters*
+![Character Chat Window](./boipoka-frontend/screenshots/character-chat-window.png)
+
+### 🎨 **Imagene - Character Visualization**
+![Imagene Feature](./boipoka-frontend/screenshots/imagene.png)
+*AI-powered character image generation with multiple artistic styles*
+
+### 🎮 **Character Guess Game**
+![Character Guess Game](./boipoka-frontend/screenshots/character-guess.png)
+*Interactive AI-powered literary character guessing game*
+
+### 📚 **Explore Books**
+![Explore Books](./boipoka-frontend/screenshots/explore-books.png)
+*Discover and search through vast collection of books with advanced filtering*
+
+### 📖 **Book Details**
+![Book Details](./boipoka-frontend/screenshots/book-details.png)
+*Comprehensive book information with reviews, ratings, and reading options*
 
 ### 📚 **Collections Dashboard**
-![Collections](./screenshots/collections.png)
+![Collections](./boipoka-frontend/screenshots/collections.png)
 *Personal library management and book organization*
 
 ### 👤 **User Profile**
-![User Profile](./screenshots/profile.png)
+![User Profile](./boipoka-frontend/screenshots/profile.png)
 *Personalized dashboard with reading statistics*
 
 ---
@@ -319,7 +334,14 @@ npm run test:collections
 boipoka.ai/
 ├── boipoka-frontend/          # Next.js React frontend
 │   ├── app/                   # App router pages
+│   │   ├── imagene/          # AI character visualization
+│   │   ├── character-chat/   # Character conversation interface
+│   │   ├── character-guess/  # Interactive guessing game
+│   │   └── ...              # Other feature pages
 │   ├── components/            # Reusable UI components
+│   │   ├── imagegenerator.tsx # Imagene main component
+│   │   ├── character-chat/   # Chat-related components
+│   │   └── ...              # Other UI components
 │   ├── lib/                   # Utility functions & configs
 │   └── public/                # Static assets
 ├── boipoka-backend/           # Express.js backend API
@@ -373,7 +395,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### 🚀 **Project Resources**
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-boipoka.ai-4CAF50?style=for-the-badge)](https://boipoka.ai)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-boipoka.ai-4CAF50?style=for-the-badge)](https://boipokaai.vercel.app/)
 [![API Reference](https://img.shields.io/badge/🔗_API_Docs-Explore_API-orange?style=for-the-badge)](https://github.com/musaddiq-rafi/boipoka.ai/wiki)
 
 </div>
@@ -452,7 +474,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
   
-**Built with ❤️ for literature lovers and AI enthusiasts**
+**Built with ❤️ for literature lovers, AI enthusiasts, and visual storytellers**
 
 *"The best way to understand a character is to have a conversation with them."*
 
